@@ -1,0 +1,36 @@
+.home-title {
+    font-size: 28px;
+    margin: 20px;
+    color: #444;
+}
+
+.home-subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.create-album-form, .my-albums, .other-albums {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f2f2f2;
+}

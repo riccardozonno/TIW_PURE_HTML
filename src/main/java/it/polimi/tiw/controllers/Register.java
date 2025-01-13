@@ -20,7 +20,7 @@ import it.polimi.tiw.dao.*;
 import it.polimi.tiw.beans.*;
 
 
-@WebServlet("/CreateAccount")
+@WebServlet("/Register")
 public class Register extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -75,7 +75,7 @@ public class Register extends HttpServlet {
         }
 
         // Once the user is registered is redirected to the LoginPage
-        response.sendRedirect(getServletContext().getContextPath() + "GoToLoginPage");
+        response.sendRedirect(getServletContext().getContextPath() + "/GoToLoginPage");
     }
 
 
@@ -187,7 +187,7 @@ public class Register extends HttpServlet {
         try {
 
 
-            userDAO.createUser( email, username, password);
+            userDAO.createUser( username, email, password);
 
         } catch (SQLException e) {
 

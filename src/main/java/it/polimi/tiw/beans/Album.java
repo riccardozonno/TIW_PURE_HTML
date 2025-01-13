@@ -12,11 +12,12 @@ public class Album {
 	private int[] id_immagini;
 	private Immagine[] immagini;
  
-	public Album(String nome, int id_user, int totale_immagini, Timestamp data_creazione) {
-		this.titolo = nome;
+	public Album(int id_album, String titolo, int id_user, int totale_immagini, Timestamp data_creazione) {
+		this.titolo = titolo;
 		this.id_user_proprietario = id_user;
 		this.totale_immagini = totale_immagini;
 		this.data_creazione = data_creazione;
+		this.id_album = id_album;
 	}
 
 	public Timestamp getData_creazione() {
