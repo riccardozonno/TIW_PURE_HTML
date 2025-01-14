@@ -45,7 +45,7 @@ public class GoToLoginPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		forward(request, response, "/WEB-INF/login.html");
+		forward(request, response, "/login.html");
 	}
 
 	/**

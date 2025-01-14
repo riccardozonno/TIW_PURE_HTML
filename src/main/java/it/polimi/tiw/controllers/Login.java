@@ -106,12 +106,13 @@ public class Login extends HttpServlet {
 		if (user == null) {
 
 			request.setAttribute("warning", "Email or password incorrect!");
-			forward(request, response, "/WEB-INF/login");
+			forward(request, response, "/login");
 			return;
 		}
 
 		HttpSession session = request.getSession();
 		session.setAttribute("currentUser", user);
+		session.setAttribute("currentUserId", user.getId_user());
 		response.sendRedirect(getServletContext().getContextPath() + "/GoToHome");
 	}
 
@@ -128,7 +129,7 @@ public class Login extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/WEB-INF/error.html");
+		forward(request, response, "/error.html");
 		return;
 	}
 

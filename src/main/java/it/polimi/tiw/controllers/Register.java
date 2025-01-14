@@ -111,7 +111,7 @@ public class Register extends HttpServlet {
         if (!email.matches(emailRegEx)) {
 
             request.setAttribute("warning", "Chosen email invalid!");
-            forward(request, response, "/WEB-INF/register.html");
+            forward(request, response, "/register.html");
             return null;
         }
 
@@ -119,7 +119,7 @@ public class Register extends HttpServlet {
         if (username.length() <= 0 || username.length() > 40) {
 
             request.setAttribute("warning", "Chosen username invalid (a valid username has more than one character and less than 45)!");
-            forward(request, response, "/WEB-INF/register.html");
+            forward(request, response, "/register.html");
             return null;
         }
 
@@ -127,14 +127,14 @@ public class Register extends HttpServlet {
         if (password.length() <= 0 || password.length() > 40) {
 
             request.setAttribute("warning", "Chosen password invalid (a valid password has more than one character and less than 45)!");
-            forward(request, response, "/WEB-INF/register.html");
+            forward(request, response, "/register.html");
             return null;
         }
 
         if (!password.equals(repeat_pwd)) {
 
             request.setAttribute("warning", "Password and repeat password field not equal!");
-            forward(request, response, "/WEB-INF/register.html");
+            forward(request, response, "/register.html");
             return null;
         }
 
@@ -158,7 +158,7 @@ public class Register extends HttpServlet {
         if(user != null) {
 
             request.setAttribute("warning", "Chosen email already in use!");
-            forward(request, response, "/WEB-INF/register.html");
+            forward(request, response, "/register.html");
             return null;
         }
 
@@ -179,7 +179,7 @@ public class Register extends HttpServlet {
         if(user != null) {
 
             request.setAttribute("warning", "Chosen username already in use!");
-            forward(request, response, "/WEB-INF/register.html");
+            forward(request, response, "/register.html");
             return null;
         }
 
@@ -229,7 +229,7 @@ public class Register extends HttpServlet {
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
 
         request.setAttribute("error", error);
-        forward(request, response, "/WEB-INF/error.html");
+        forward(request, response, "/error.html");
         return;
     }
 

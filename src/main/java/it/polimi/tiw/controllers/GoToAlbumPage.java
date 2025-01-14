@@ -63,7 +63,9 @@ public class GoToAlbumPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 // Ottieni l'ID dell'album dai parametri della richiesta
+		String pageStartStr = request.getParameter("pageStart");
         String albumIdStr = request.getParameter("id_album");
+        System.out.println(albumIdStr);
         int albumId;
 
         try {
@@ -73,9 +75,9 @@ public class GoToAlbumPage extends HttpServlet {
             return;
         }
 
-        // Recupera l'oggetto Album dal database (o da un'altra fonte dati)
+        // Recupera l'oggetto Album dal database 
         AlbumDAO albumDAO = new AlbumDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
-        Album album = null;
+        Album album;
 		try {
 			album = albumDAO.getAlbumById(albumId);
 		} catch (SQLException e) {
@@ -88,12 +90,22 @@ public class GoToAlbumPage extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Album not found");
             return;
         }
+        System.out.println(album.getTitolo());
 
+        int pageStart = 0;
+        if (pageStartStr != null && !pageStartStr.isEmpty()) {
+            try {
+                pageStart = Integer.parseInt(pageStartStr);
+            } catch (NumberFormatException e) {
+                pageStart = 0;  // Se non valido, imposto a 0
+            }
+        }
         // Salva l'oggetto Album come attributo della richiesta
         request.setAttribute("album", album);
-
+        request.setAttribute("pageStart", pageStart);
+        
         // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
-        request.getRequestDispatcher("/WEB-INF/albumPage.html").forward(request, response);
+        forward(request, response,"/albumPage.html");
     }
 
 	/**
@@ -117,7 +129,7 @@ public class GoToAlbumPage extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/WEB-INF/error.html");
+		forward(request, response, "/error.html");
 		return;
 	}
 	

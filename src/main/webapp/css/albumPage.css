@@ -1,120 +1,162 @@
-/* Impostazioni generali */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-}
-
-/* Barra di navigazione */
-.navigation-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Pulsante Home in alto a sinistra */
+.btn-home {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #007BFF;
+    color: white;
     padding: 10px 20px;
-    background-color: #444;
-    color: white;
-}
-
-.navigation-bar .btn {
-    background-color: #0078D7;
-    color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: 5px;
     cursor: pointer;
-    text-transform: uppercase;
+    font-weight: bold;
 }
 
-.navigation-bar .btn:hover {
-    background-color: #005EA6;
+.btn-home:hover {
+    background-color: #0056b3;
 }
 
+/* Pulsante Upload in alto a destra */
 .btn-upload {
-    margin-left: auto;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #28A745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-upload:hover {
+    background-color: #1e7e34;
 }
 
 /* Titolo dell'album */
-.album-title {
+h1 {
     text-align: center;
-    margin: 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-    color: #444;
+    margin-top: 80px;
+    font-size: 28px;
+    color: #333;
 }
 
-/* Tabella immagini */
-.image-table {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-}
-
+/* Tabella delle immagini */
 .image-table table {
+    width: 60%;
+    margin: 0 auto;
     border-collapse: collapse;
-    width: auto;
-    table-layout: fixed;
 }
 
 .image-table td {
-    width: 120px; /* Dimensione delle celle */
-    height: 150px; /* Altezza delle celle */
+    width: 120px;
+    height: 150px;
     text-align: center;
     vertical-align: middle;
     border: 1px solid #ccc;
-    background-color: white;
-    padding: 10px;
-}
-
-.image-table td a {
-    text-decoration: none;
-    color: #333;
+    background-color: #f9f9f9;
 }
 
 .image-table td img {
     max-width: 100px;
     max-height: 100px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-.image-table td div {
-    font-size: 14px;
-    word-wrap: break-word;
+.empty-cell {
+    width: 120px;
+    height: 150px;
+    background-color: #f0f0f0;
 }
 
-.image-table td:empty {
-    background-color: #f4f4f4;
-    border: 1px dashed #ccc;
-}
-
-/* Navigazione tra pagine */
+/* Navigazione tra le pagine */
 .pagination {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /*space-between*/
     align-items: center;
-    margin: 20px 50px;
+    width: 60%;
+    margin: 20px auto;
+    
 }
 
-.pagination .btn {
-    background-color: #0078D7;
+.btn-previous, .btn-next {
+    background-color: #007BFF;
     color: white;
+    padding: 10px 20px;
     border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: 5px;
     cursor: pointer;
-    text-transform: uppercase;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-left: 10 px;
 }
 
-.pagination .btn:hover {
-    background-color: #005EA6;
+.btn-previous:hover, .btn-next:hover {
+    background-color: #0056b3;
 }
 
-.pagination .btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+/* Form di Upload */
+#uploadForm {
+    width: 40%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#uploadForm h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#uploadForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+#uploadForm input[type="text"],
+#uploadForm textarea,
+#uploadForm input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#uploadForm button[type="submit"] {
+    width: 100%;
+    background-color: #28A745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#uploadForm button[type="submit"]:hover {
+    background-color: #1e7e34;
+}
+
+/* Bottone Chiudi Form */
+#uploadForm button {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#uploadForm button:hover {
+    background-color: #bd2130;
 }

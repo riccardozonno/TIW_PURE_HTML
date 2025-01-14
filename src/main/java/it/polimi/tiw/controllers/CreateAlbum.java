@@ -114,7 +114,7 @@ public class CreateAlbum extends HttpServlet {
         if (titolo.length() <= 0 || titolo.length() > 49) {
 
             request.setAttribute("warning", "Chosen title invalid (a valid title has more than one character and less than 50)!");
-            forward(request, response, "/WEB-INF/home.html");
+            forward(request, response, "/home.html");
             return null;
         }
         
@@ -212,7 +212,7 @@ public class CreateAlbum extends HttpServlet {
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
 
         request.setAttribute("error", error);
-        forward(request, response, "/WEB-INF/error.html");
+        forward(request, response, "/error.html");
         return;
     }
 

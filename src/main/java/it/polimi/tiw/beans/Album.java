@@ -11,6 +11,7 @@ public class Album {
 	private int totale_immagini;
 	private int[] id_immagini;
 	private Immagine[] immagini;
+	private String usernameCreatore;
  
 	public Album(int id_album, String titolo, int id_user, int totale_immagini, Timestamp data_creazione) {
 		this.titolo = titolo;
@@ -28,7 +29,7 @@ public class Album {
 		this.data_creazione = data_creazione;
 	}
 	
-	public Immagine[] getImage() {
+	public Immagine[] getImmagini() {
 		return immagini;
 	}
 	
@@ -70,7 +71,14 @@ public class Album {
 		return id_immagini;
 	}
 
-	public void setId_immagini(int index, int id_immagine) {
-		this.id_immagini[index] = id_immagine;
+	public void setId_immagini(int[] id_immagine) {
+		this.id_immagini = id_immagine;
+	}
+	public String getUsernameCreatore() {
+	    return usernameCreatore;
+	}
+
+	public void setUsernameCreatore(String usernameCreatore) {
+	    this.usernameCreatore = usernameCreatore;
 	}
 }

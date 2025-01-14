@@ -16,8 +16,10 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Immagine;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.TemplateHandler;
 
@@ -76,15 +78,24 @@ public class GoToHome extends HttpServlet {
 		AlbumDAO albumDAO = new AlbumDAO(connection);
 		Album[] userAlbums;
 		Album[] otherAlbums;
+		ImmagineDAO immagineDAO = new ImmagineDAO(connection);
+		Immagine[] userImmagini;
+		
 
 		try {
-			userAlbums = albumDAO.getAllUserAlbum(currentUser.getId_user());
+			userAlbums = albumDAO.getAllUserAlbum2(currentUser.getId_user());
 		} catch (SQLException e) {
 			forwardToErrorPage(request, response, e.getMessage());
 			return;
 		}
 		try {
-			otherAlbums = albumDAO.getAllOtherUserAlbum(currentUser.getId_user());
+			otherAlbums = albumDAO.getAllOtherUserAlbums(currentUser.getId_user());
+		} catch (SQLException e) {
+			forwardToErrorPage(request, response, e.getMessage());
+			return;
+		}
+		try {
+			userImmagini = immagineDAO.getAllUserPhoto(currentUser.getId_user());
 		} catch (SQLException e) {
 			forwardToErrorPage(request, response, e.getMessage());
 			return;
@@ -98,7 +109,11 @@ public class GoToHome extends HttpServlet {
 			request.setAttribute("otherAlbums", otherAlbums); 
 			}else
 				request.setAttribute("otherAlbums", null);
-		forward(request, response, "/WEB-INF/home.html");
+		if(userImmagini != null) {
+			request.setAttribute("myImages", userImmagini);
+			}else
+				request.setAttribute("myAlbums", null);
+		forward(request, response, "/home.html");
 	}
 
 	/**
@@ -124,7 +139,7 @@ public class GoToHome extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/WEB-INF/error.html");
+		forward(request, response, "/error.html");
 		return;
 	}
 

@@ -3,6 +3,8 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/webapp/WEB-INF/css"/>
 	<classpathentry kind="src" path="src/main/webapp/css"/>
+	<classpathentry kind="src" path="src/main/webapp/images"/>
+	<classpathentry kind="src" path="src/main/webapp/img"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
 		<attributes>
 			<attribute name="module" value="true"/>

@@ -44,7 +44,7 @@ public class GoToRegisterPage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		forward(request, response, "/WEB-INF/register.html");
+		forward(request, response, "/register.html");
 	}
 
 	/**

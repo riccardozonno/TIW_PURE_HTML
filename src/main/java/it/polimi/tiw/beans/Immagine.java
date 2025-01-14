@@ -10,9 +10,9 @@ public class Immagine {
     private String percorso;
     private int id_user_proprietario;
 
-    public Immagine(int id,String nome, String descrizione, String path, int id_user, Timestamp data_creazione) {
+    public Immagine(int id,String titolo, String descrizione, String path, int id_user, Timestamp data_creazione) {
         this.id_immagine = id;
-    	this.titolo = nome;
+    	this.titolo = titolo;
         this.descrizione = descrizione;
         this.percorso = path;
         this.id_user_proprietario = id_user;
