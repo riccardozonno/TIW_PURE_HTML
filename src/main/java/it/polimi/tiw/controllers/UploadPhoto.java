@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,6 +22,8 @@ import javax.servlet.http.Part;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
+import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.TemplateHandler;
 
@@ -35,7 +38,6 @@ public class UploadPhoto extends HttpServlet {
     private TemplateEngine templateEngine;
     private Connection connection;
 
-    private static final String UPLOAD_DIR = "img";
     
     public UploadPhoto() {
 		super();
@@ -55,34 +57,41 @@ public class UploadPhoto extends HttpServlet {
             response.sendRedirect("/login.html");
             return;
         }
-
+        if(true);
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         int albumId = Integer.parseInt(request.getParameter("album_id"));
         int userId = (int) session.getAttribute("currentUserId");
 
      // Percorso corretto per salvare le immagini
-        String uploadPath = getServletContext().getRealPath("/img");
-        File uploadDir = new File(uploadPath);
-        //if (!uploadDir.exists()) uploadDir.mkdirs();
+        String uploadPath = getServletContext().getRealPath("/static/res");
+
+        Random random = new Random();
+
+     // Obtain a number between [0 - 49].
+        int n = random.nextInt(1000000);
+        String rand = Integer.toString(n);
+        AlbumDAO albumDAO = new AlbumDAO(connection);
+        ImmagineDAO immagineDAO = new ImmagineDAO(connection);
 
         try {
             Part filePart = request.getPart("file");
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileName = rand + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String filePath = uploadPath + File.separator + fileName;
             System.out.println("Percorso di upload: " + uploadPath);
+            System.out.println("ciao");
 
             filePart.write(filePath);
             System.out.println("ho scritto il file");
+            
+            String dbPath =  "static/res/" + fileName;
 
-            String dbPath =  "img/" + fileName;
+            int imageId = immagineDAO.insertImageData(connection, title, description, dbPath, userId);
 
-            int imageId = insertImageData(connection, title, description, dbPath, userId);
-
-            linkImageToAlbum(connection, imageId, albumId, userId);
+            immagineDAO.linkImageToAlbum(connection, imageId, albumId, userId);
 
             // ✅ Aggiornamento del totale immagini nell'album
-            updateAlbumImageCount(connection, albumId);
+            albumDAO.updateAlbumImageCount(connection, albumId);
 
             response.sendRedirect("GoToAlbumPage?id_album=" + albumId);
 
@@ -91,43 +100,6 @@ public class UploadPhoto extends HttpServlet {
         }
     }
 
-    private int insertImageData(Connection connection, String title, String description, String filePath, int userId) throws SQLException {
-        String query = "INSERT INTO immagine (titolo, percorso, descrizione, proprietario) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, title);
-            statement.setString(2, filePath);
-            statement.setString(3, description);
-            statement.setInt(4, userId);
-            statement.executeUpdate();
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                } else {
-                	throw new SQLException("Errore nell'inserimento dell'immagine, nessun ID generato.");
-                }
-            }
-        }
-    }
-
-    private void linkImageToAlbum(Connection connection, int imageId, int albumId, int userId) throws SQLException {
-        String query = "INSERT INTO image_album (id_ima, id_alb, id_use) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, imageId);
-            statement.setInt(2, albumId);
-            statement.setInt(3, userId);
-            statement.executeUpdate();
-        }
-    }
-
-    //  Metodo per aggiornare il totale delle immagini in un album
-    private void updateAlbumImageCount(Connection connection, int albumId) throws SQLException {
-        String query = "UPDATE album SET totale_immagini = totale_immagini + 1 WHERE id_album = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, albumId);
-            statement.executeUpdate();
-        }
-    }
     /**
 	 * Forwards to the ErrorPage
 	 * 
@@ -162,4 +134,18 @@ public class UploadPhoto extends HttpServlet {
 		templateEngine.process(path, ctx, response.getWriter());
 
 	}
+	
+    @Override
+    public void destroy() {
+    	
+		try {
+			
+			ConnectionHandler.closeConnection(connection);
+		
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+	}
+
 }

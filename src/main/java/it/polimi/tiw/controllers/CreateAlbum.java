@@ -46,6 +46,8 @@ public class CreateAlbum extends HttpServlet {
         this.connection = ConnectionHandler.getConnection(servletContext);
     }
 
+    
+    
     @Override
     public void destroy() {
 
@@ -182,7 +184,7 @@ public class CreateAlbum extends HttpServlet {
         // else if an Exception is raised forwards to the ErrorPage
         try {
 
-            album = albumDAO.getAlbumByTitolo(titolo);
+        	album = albumDAO.getAlbumByTitolo(titolo);
 
         } catch (SQLException e) {
 

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,6 +22,8 @@ import javax.servlet.http.Part;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
+import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.TemplateHandler;
 
@@ -37,7 +40,6 @@ public class UploadPhotoFromHome extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
     private Connection connection;
-    private static final String UPLOAD_DIR = "img";
 
     public UploadPhotoFromHome() {
 		super();
@@ -64,50 +66,32 @@ public class UploadPhotoFromHome extends HttpServlet {
         int userId = (int) session.getAttribute("currentUserId");
 
      // Percorso corretto per salvare le immagini
-        String uploadPath = getServletContext().getRealPath("/img");
-        
+        String uploadPath = getServletContext().getRealPath("/static/res");
+        Random random = new Random();
+
+     // Obtain a number between [0 - 49].
+        int n = random.nextInt(1000000);
+        String rand = Integer.toString(n);
+        ImmagineDAO immagineDAO = new ImmagineDAO(connection);
 
         try {
+        	
             Part filePart = request.getPart("file");
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileName = rand + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String filePath = uploadPath + File.separator + fileName;
             System.out.println("Percorso di upload: " + uploadPath);
 
             filePart.write(filePath);
             System.out.println("ho scritto il file");
 
-            String dbPath =  "img/" + fileName;
+            String dbPath =  "static/res/" + fileName;
 
-            insertImageData(connection, title, description, dbPath, userId);
-
-            //linkImageToAlbum(connection, imageId, albumId, userId);
-
-            // ✅ Aggiornamento del totale immagini nell'album
-            //updateAlbumImageCount(connection, albumId);
+            immagineDAO.insertImageData(connection, title, description, dbPath, userId);
 
             response.sendRedirect(getServletContext().getContextPath() + "/GoToHome");
 
         } catch (Exception e) {
             forwardToErrorPage(request, response, e.getMessage());
-        }
-    }
-
-    private int insertImageData(Connection connection, String title, String description, String filePath, int userId) throws SQLException {
-        String query = "INSERT INTO immagine (titolo, percorso, descrizione, proprietario) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, title);
-            statement.setString(2, filePath);
-            statement.setString(3, description);
-            statement.setInt(4, userId);
-            statement.executeUpdate();
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
-                } else {
-                	throw new SQLException("Errore nell'inserimento dell'immagine, nessun ID generato.");
-                }
-            }
         }
     }
 
@@ -143,5 +127,19 @@ public class UploadPhotoFromHome extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		templateEngine.process(path, ctx, response.getWriter());
 	}
+	
+    @Override
+    public void destroy() {
+    	
+		try {
+			
+			ConnectionHandler.closeConnection(connection);
+		
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+	}
+
 }
 	

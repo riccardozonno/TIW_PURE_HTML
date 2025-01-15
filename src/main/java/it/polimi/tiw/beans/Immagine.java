@@ -9,14 +9,24 @@ public class Immagine {
     private String descrizione;
     private String percorso;
     private int id_user_proprietario;
-
-    public Immagine(int id,String titolo, String descrizione, String path, int id_user, Timestamp data_creazione) {
+    private Commento[] commenti;
+    
+    public Immagine(int id,String titolo, String descrizione, String path, int id_user, Timestamp data_creazione, Commento[] commenti) {
         this.id_immagine = id;
     	this.titolo = titolo;
         this.descrizione = descrizione;
         this.percorso = path;
         this.id_user_proprietario = id_user;
         this.data_creazione = data_creazione;
+        this.commenti = commenti;
+    }
+    
+    public Commento[] getCommenti(){
+    	return this.commenti;
+    }
+    
+    public void setCommenti(Commento[] commenti) {
+    	this.commenti = commenti;
     }
 
     public Timestamp getData_creazione() {

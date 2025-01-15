@@ -9,7 +9,8 @@ public class Commento {
     private int id_user;
     private int id_immagine;
     
-    public Commento(String testo, int id_user, int id_immagine,  Timestamp data_creazione) {
+    public Commento(int id_commento, String testo, int id_user, int id_immagine,  Timestamp data_creazione) {
+    		this.id_commento = id_commento;
 	        this.data_creazione = data_creazione;
 	        this.testo = testo;
 	        this.id_user = id_user;

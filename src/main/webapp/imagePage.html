@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="ISO-8859-1">
+    <title th:text="'Immagine - ' + ${image.titolo}">Visualizza Immagine</title>
+    <link rel="stylesheet" type="text/css" href="css/global.css" th:href="@{/css/global.css}" />
 </head>
+
 <body>
+
+    <!-- Bottone Home -->
+    <button onclick="window.location.href='GoToHome'" class="btn btn-home">Home</button>
+
+    <!-- Titolo e Descrizione della Foto -->
+    <div class="image-details">
+        <h1 th:text="${image.titolo}">Titolo dell'Immagine</h1>
+        <p th:text="${image.descrizione}">Descrizione dell'immagine</p>
+    </div>
+
+    <!-- Visualizzazione dell'Immagine -->
+    <div class="image-container">
+        <img th:src="@{${image.percorso}}" alt="Immagine Non Trovata" class="full-image"/>
+    </div>
+
+    <!-- Bottone per Eliminare la Foto (visibile solo al proprietario) -->
+    <div th:if="${session.currentUser.id_user == image.proprietario}">
+        <form th:action="@{/DeletePhoto}" method="post">
+            <input type="hidden" name="image_id" th:value="${image.id_immagine}" />
+            <button type="submit" class="btn btn-delete">Elimina Foto</button>
+        </form>
+    </div>
+
+    <!-- Sezione Commenti -->
+    <div class="comments-section">
+        <h3>Commenti</h3>
+        
+        <div th:if="${image.commenti != null and image.commenti.length > 0}">
+            <ul>
+                <li th:each="commento : ${image.commenti}">
+                    <strong th:text="${commento.username}">Username</strong>: 
+                    <span th:text="${commento.testo}">Contenuto del commento</span>
+                </li>
+            </ul>
+        </div>
+
+        <div th:if="${image.commenti == null or image.commenti.length == 0}">
+            <p>Nessun commento presente.</p>
+        </div>
+    </div>
+
+    <!-- Form per Inserire un Nuovo Commento -->
+    <div class="add-comment">
+        <h3>Aggiungi un Commento</h3>
+        <form th:action="@{/AddComment}" method="post">
+            <input type="hidden" name="image_id" th:value="${image.id_immagine}" />
+            <textarea name="testo" placeholder="Scrivi il tuo commento qui..." required></textarea><br>
+            <button type="submit" class="btn btn-comment">Invia Commento</button>
+        </form>
+    </div>
 
 </body>
 </html>

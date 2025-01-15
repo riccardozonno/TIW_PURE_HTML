@@ -1,19 +1,14 @@
 package it.polimi.tiw.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.ArrayList;
-
-import com.mysql.cj.xdevapi.Statement;
 
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Immagine;
-import it.polimi.tiw.beans.User;
 
 public class AlbumDAO {
 	private final Connection connection;
@@ -172,6 +167,26 @@ public class AlbumDAO {
 			}
 		}
 	}
+ 	
+    public void updateAlbumImageCount(Connection connection, int albumId) throws SQLException {
+    	String performedAction = " updating totale_immagini in album " + Integer.toString(albumId);
+        String query = "UPDATE album SET totale_immagini = totale_immagini + 1 WHERE id_album = ?";
+        PreparedStatement statement = null;
+        try  {
+        	statement = connection.prepareStatement(query);
+            statement.setInt(1, albumId);
+            statement.executeUpdate();
+        }catch (SQLException e) {
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+        } finally {
+        	try {
+			statement.close();
+			} catch (Exception e) {
+				throw new SQLException(
+						"Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
+			}
+ 	    }
+    }
  	
  	public Album[] getAllOtherUserAlbums(int id_user) throws SQLException {
  	    String performedAction = " finding all albums of users different from id_user ";

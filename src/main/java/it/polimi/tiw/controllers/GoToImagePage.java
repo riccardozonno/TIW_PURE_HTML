@@ -15,7 +15,10 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Immagine;
 import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.ImmagineDAO;
+import it.polimi.tiw.utils.TemplateHandler;
 
 /**
  * Servlet implementation class GoToImagePage
@@ -30,77 +33,71 @@ public class GoToImagePage extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public GoToImagePage() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void init() throws ServletException {
+
+		ServletContext servletContext = getServletContext();
+		this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String pageStartStr = request.getParameter("pageStart");
-        String albumIdStr = request.getParameter("id_album");
-        System.out.println(albumIdStr);
-        int albumId;
+		
+       String imageIdStr = request.getParameter("imageId");
+       System.out.println(imageIdStr);
+       int imageId;
 
-        try {
-            albumId = Integer.parseInt(albumIdStr); // Converti l'ID in un intero
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid album ID");
-            return;
-        }
+       try {
+           imageId = Integer.parseInt(imageIdStr); // Converti l'ID in un intero
+       } catch (NumberFormatException e) {
+           response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid image ID");
+           return;
+       }
 
-        // Recupera l'oggetto Album dal database 
-        AlbumDAO albumDAO = new AlbumDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
-        Album album;
+       // Recupera l'oggetto Album dal database 
+       ImmagineDAO immagineDAO = new ImmagineDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
+       Immagine immagine;
 		try {
-			album = albumDAO.getAlbumById(albumId);
+			immagine = immagineDAO.getImageById(imageId);
 		} catch (SQLException e) {
 			forwardToErrorPage(request, response, e.getMessage());
 			return;
 		}
 
-        if (album == null) {
-            // Se l'album non esiste, invia un errore 404
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Album not found");
-            return;
-        }
-        System.out.println(album.getTitolo());
+       if (immagine == null) {
+           // Se l'album non esiste, invia un errore 404
+           response.sendError(HttpServletResponse.SC_NOT_FOUND, "Immagine not found");
+           return;
+       }
+       System.out.println(immagine.getTitolo());
 
-        int pageStart = 0;
-        if (pageStartStr != null && !pageStartStr.isEmpty()) {
-            try {
-                pageStart = Integer.parseInt(pageStartStr);
-            } catch (NumberFormatException e) {
-                pageStart = 0;  // Se non valido, imposto a 0
-            }
-        }
-        // Salva l'oggetto Album come attributo della richiesta
-        request.setAttribute("album", album);
-        request.setAttribute("pageStart", pageStart);
-        
-        // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
-        forward(request, response,"/albumPage.html");
-	}
+       
+       // Salva l'oggetto Album come attributo della richiesta
+       request.setAttribute("image", immagine);
+       
+       // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
+       forward(request, response,"/imagePage.html");
+   }
 
+	
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
-	/**
-	 * Forwards to the ErrorPage
-	 * 
-	 * @param request
-	 * @param response
-	 * @param error
-	 * @throws ServletException
-	 * @throws IOException
-	 */
+	
 	private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error)
 			throws ServletException, IOException {
 
@@ -111,7 +108,7 @@ public class GoToImagePage extends HttpServlet {
 
 	/**
 	 * Forwards to the specified path
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @param path
@@ -124,7 +121,5 @@ public class GoToImagePage extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		templateEngine.process(path, ctx, response.getWriter());
-
 	}
-
 }
