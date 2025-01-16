@@ -22,6 +22,7 @@ import javax.servlet.http.Part;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
@@ -32,7 +33,7 @@ import it.polimi.tiw.utils.TemplateHandler;
  */
 @WebServlet("/UploadPhotoFromHome")
 @MultipartConfig(
-	    fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+	    fileSizeThreshold = 1024 * 50,  // 50KB
 	    maxFileSize = 1024 * 1024 * 10,      // 10MB
 	    maxRequestSize = 1024 * 1024 * 50    // 50MB
 	)
@@ -62,8 +63,7 @@ public class UploadPhotoFromHome extends HttpServlet {
 
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        //int albumId = Integer.parseInt(request.getParameter("album_id"));
-        int userId = (int) session.getAttribute("currentUserId");
+        int userId = ((User) session.getAttribute("currentUser")).getId_user();
 
      // Percorso corretto per salvare le immagini
         String uploadPath = getServletContext().getRealPath("/static/res");
@@ -86,7 +86,7 @@ public class UploadPhotoFromHome extends HttpServlet {
 
             String dbPath =  "static/res/" + fileName;
 
-            immagineDAO.insertImageData(connection, title, description, dbPath, userId);
+            immagineDAO.insertImageData(title, description, dbPath, userId);
 
             response.sendRedirect(getServletContext().getContextPath() + "/GoToHome");
 

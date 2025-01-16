@@ -4,12 +4,20 @@
     <meta charset="ISO-8859-1">
     <title th:text="'Immagine - ' + ${image.titolo}">Visualizza Immagine</title>
     <link rel="stylesheet" type="text/css" href="css/global.css" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" type="text/css" href="css/imagePage.css" th:href="@{/css/imagePage.css}" />
 </head>
 
 <body>
 
-    <!-- Bottone Home -->
-    <button onclick="window.location.href='GoToHome'" class="btn btn-home">Home</button>
+    <!-- Bottone Album -->
+    <a th:href="@{/GoToHome}">
+    	<button type="button">Back to Home</button>
+	</a>
+    
+    <!-- Bottone Album -->
+    <a th:href="@{/GoToAlbumPage(albumId=${albumId})}">
+    	<button type="button">Back to Album</button>
+	</a>
 
     <!-- Titolo e Descrizione della Foto -->
     <div class="image-details">
@@ -23,9 +31,10 @@
     </div>
 
     <!-- Bottone per Eliminare la Foto (visibile solo al proprietario) -->
-    <div th:if="${session.currentUser.id_user == image.proprietario}">
-        <form th:action="@{/DeletePhoto}" method="post">
-            <input type="hidden" name="image_id" th:value="${image.id_immagine}" />
+    <div th:if="${session.currentUser.id_user == image.id_user_proprietario}">
+        <form th:action="@{/DeletePhoto(albumId=${albumId}, imageId=${image.id_immagine})}" method="post">
+            <input type="hidden" name="imageId" th:value="${image.id_immagine}" />
+            <input type="hidden" name="albumId" th:value="${albumId}" />
             <button type="submit" class="btn btn-delete">Elimina Foto</button>
         </form>
     </div>
@@ -52,7 +61,8 @@
     <div class="add-comment">
         <h3>Aggiungi un Commento</h3>
         <form th:action="@{/AddComment}" method="post">
-            <input type="hidden" name="image_id" th:value="${image.id_immagine}" />
+            <input type="hidden" name="imageId" th:value="${image.id_immagine}" />
+            <input type="hidden" name="albumId" th:value="${albumId}" />
             <textarea name="testo" placeholder="Scrivi il tuo commento qui..." required></textarea><br>
             <button type="submit" class="btn btn-comment">Invia Commento</button>
         </form>

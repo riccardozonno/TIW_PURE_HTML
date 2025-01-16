@@ -20,7 +20,7 @@ public class ImmagineDAO {
     	String performedAction = " finding an image by id";
     	String performedAction2 = " finding all comment of a image by id_image ";
     	String query = "SELECT * FROM immagine WHERE id_image = ?";
-    	String query2 = "SELECT * FROM commento WHERE id_image = ?";
+    	String query2 = "SELECT c.id_comm FROM commento c WHERE c.id_im = ?";
     	PreparedStatement statement = null;
     	PreparedStatement statement2 = null;
     	ResultSet result = null;
@@ -55,18 +55,16 @@ public class ImmagineDAO {
 	                    result2 = statement2.executeQuery();
 	                        int index = 0;
 	                        while (result2.next() && index < totaleCommenti) {
-	                            id_comm[index] = result2.getInt("id_ima");
+	                            id_comm[index] = result2.getInt("id_comm");
 	                            index++;
 	                    }
 	                
 	                // Carica le immagini dal database
-	                commentoDAO = new CommentoDAO(connection);
-	                for (int i = 0; i < totaleCommenti; i++) {
-	                    commenti[i] = CommentoDAO.getCommentoById(id_comm[i]);
-	                }
-
 	                
-	                immagine.setCommenti(commenti);
+	                for (int i = 0; i < totaleCommenti; i++) {
+	                	commenti[i] = commentoDAO.getCommentoById(id_comm[i]);
+	                }
+	                
 	            }
             
             immagine = new Immagine(id_image, titolo, descrizione, percorso, proprietario, data, commenti );
@@ -90,6 +88,21 @@ public class ImmagineDAO {
                 }
             } catch (Exception e) {
                 throw new SQLException("Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
+            }
+            try {
+                if (result2 != null) {
+                    result2.close();
+                }
+            } catch (Exception e) {
+                throw new SQLException("Error closing the result set when" + performedAction2 + "[ " + e.getMessage() + " ]");
+            }
+
+            try {
+                if (statement2 != null) {
+                    statement2.close();
+                }
+            } catch (Exception e) {
+                throw new SQLException("Error closing the statement when" + performedAction2 + "[ " + e.getMessage() + " ]");
             }
         }
     	return immagine;
@@ -125,7 +138,11 @@ public class ImmagineDAO {
  	            String descrizione= result.getString("descrizione");
  	            String percorso = result.getString("percorso");
  	            int id_immagine = result.getInt("id_image");
- 	            Commento[] commenti = commentoDAO.getCommentoById(id_immagine);
+ 	            int totale_commenti = result.getInt("totale_commenti");
+ 	            Commento[] commenti = new Commento[totale_commenti];
+ 	            
+ 	            //TODO for per riempire arrai commenti con i commenti
+ 	            
  	            
 
  	            immagine = new Immagine(id_immagine, titolo, descrizione, percorso, id_user_proprietario, data, commenti);
@@ -146,7 +163,7 @@ public class ImmagineDAO {
  	    return allPhotos;
  	}
 
-	public void linkImageToAlbum(Connection connection, int imageId, int albumId, int userId) throws SQLException {
+	public void linkImageToAlbum(int imageId, int albumId, int userId) throws SQLException {
 		String performedAction = "create record in image_album to link an image to an album";
         String query = "INSERT INTO image_album (id_ima, id_alb, id_use) VALUES (?, ?, ?)";
         PreparedStatement statement = null;
@@ -163,7 +180,22 @@ public class ImmagineDAO {
  	    }
     }
 	
-    public int insertImageData(Connection connection, String title, String description, String filePath, int userId) throws SQLException {
+	public void delinkImageToAlbum(int imageId) throws SQLException {
+		String performedAction = "delete record in image_album to delink an image from an album";
+        String query = "DELETE FROM image_album WHERE id_ima = ?";
+        PreparedStatement statement = null;
+        try  {
+        	statement = connection.prepareStatement(query);
+            statement.setInt(1, imageId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+ 	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+ 	    } finally {
+ 	        statement.close();
+ 	    }
+    }
+	
+    public int insertImageData( String title, String description, String filePath, int userId) throws SQLException {
     	String performedAction = "create a new image";
         String query = "INSERT INTO immagine (titolo, percorso, descrizione, proprietario) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = null;
@@ -222,6 +254,64 @@ public class ImmagineDAO {
  	    }
  	}
 
+	
+	public void deleteImageById(int imageId) throws SQLException {
+		String performedAction = "deleting an image ";
+	    String query = "DELETE FROM immagine WHERE id_image = ?";
+	    PreparedStatement statement = null;
+	    try {
+	    	statement = connection.prepareStatement(query);
+	        statement.setInt(1, imageId);
+	        statement.executeUpdate();
+	    }catch (SQLException e) {
+	            throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+	    } finally {
+	    	statement.close();
+	    }
+	}
+
+
+	public String getImagePathById(int imageId) throws SQLException {
+	    String query = "SELECT percorso FROM immagine WHERE id_image = ?";
+	    PreparedStatement statement = null;
+	    ResultSet resultSet = null;
+	    try {
+	    	statement = connection.prepareStatement(query);
+	        statement.setInt(1, imageId);
+	        resultSet= statement.executeQuery();
+	        if (resultSet.next()) {
+	        	return resultSet.getString("percorso");
+	        	} else {
+	                throw new SQLException("Nessuna immagine trovata con ID: " + imageId);
+	            }
+	    } finally {
+	    	closeResources(resultSet, statement);
+	    }
+	}
 
 	
+	public void updateTotCommentiByImageId(int id_immagine) throws SQLException {
+
+    	String performedAction = " updating totale_commenti in immagine " + Integer.toString(id_immagine);
+        String query = "UPDATE immagine SET totale_commenti = totale_commenti + 1 WHERE id_image = ?";
+        PreparedStatement statement = null;
+        try  {
+        	statement = connection.prepareStatement(query);
+            statement.setInt(1, id_immagine);
+            statement.executeUpdate();
+        }catch (SQLException e) {
+			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+        } finally {
+        	try {
+			statement.close();
+			} catch (Exception e) {
+				throw new SQLException(
+						"Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
+			}
+ 	    }
+    }
+	
+
+	
+
 }

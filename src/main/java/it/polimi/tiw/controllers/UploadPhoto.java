@@ -22,6 +22,7 @@ import javax.servlet.http.Part;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
@@ -29,7 +30,7 @@ import it.polimi.tiw.utils.TemplateHandler;
 
 @WebServlet("/UploadPhoto")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+    fileSizeThreshold = 1024 * 50,  // 50KB
     maxFileSize = 1024 * 1024 * 10,      // 10MB
     maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
@@ -54,14 +55,14 @@ public class UploadPhoto extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect("/login.html");
+            response.sendRedirect("login.html");
             return;
         }
-        if(true);
+        
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        int albumId = Integer.parseInt(request.getParameter("album_id"));
-        int userId = (int) session.getAttribute("currentUserId");
+        int albumId = Integer.parseInt(request.getParameter("albumId"));
+        int userId = ((User) session.getAttribute("currentUser")).getId_user();
 
      // Percorso corretto per salvare le immagini
         String uploadPath = getServletContext().getRealPath("/static/res");
@@ -82,18 +83,23 @@ public class UploadPhoto extends HttpServlet {
             System.out.println("ciao");
 
             filePart.write(filePath);
-            System.out.println("ho scritto il file");
+            File uploadedFile = new File(filePath);
+            if (uploadedFile.exists()) {
+                System.out.println("File scritto correttamente: " + filePath);
+            } else {
+                System.err.println("Errore: il file non è stato scritto.");
+            }
             
             String dbPath =  "static/res/" + fileName;
 
-            int imageId = immagineDAO.insertImageData(connection, title, description, dbPath, userId);
+            int imageId = immagineDAO.insertImageData(title, description, dbPath, userId);
 
-            immagineDAO.linkImageToAlbum(connection, imageId, albumId, userId);
+            immagineDAO.linkImageToAlbum(imageId, albumId, userId);
 
-            // ✅ Aggiornamento del totale immagini nell'album
+            // Aggiornamento del totale immagini nell'album
             albumDAO.updateAlbumImageCount(connection, albumId);
 
-            response.sendRedirect("GoToAlbumPage?id_album=" + albumId);
+            response.sendRedirect("GoToAlbumPage?albumId=" + albumId);
 
         } catch (Exception e) {
             forwardToErrorPage(request, response, e.getMessage());

@@ -8,14 +8,25 @@ public class Commento {
     private Timestamp data_creazione;
     private int id_user;
     private int id_immagine;
+    private String username;
     
-    public Commento(int id_commento, String testo, int id_user, int id_immagine,  Timestamp data_creazione) {
+    public Commento(int id_commento, String testo, int id_user, int id_immagine,  Timestamp data_creazione, String username) {
     		this.id_commento = id_commento;
 	        this.data_creazione = data_creazione;
 	        this.testo = testo;
 	        this.id_user = id_user;
 	        this.id_immagine = id_immagine;
+	        this.username = username;
+	        
 	    }
+    public String getUsername() {
+        return this.username;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     
     public Timestamp getData_creazione() {
         return data_creazione;

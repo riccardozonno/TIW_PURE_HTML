@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/unbescape-1.1.6.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/apache-commons-lang.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/thymeleaf-3.0.11.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/ognl-3.1.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/mysql-connector-j-8.0.32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/attoparser-2.0.5.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/main/webapp/WEB-INF/lib/javassist-3.20.0-GA.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

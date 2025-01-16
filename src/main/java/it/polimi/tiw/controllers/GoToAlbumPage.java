@@ -64,7 +64,7 @@ public class GoToAlbumPage extends HttpServlet {
 		// TODO Auto-generated method stub
 		 // Ottieni l'ID dell'album dai parametri della richiesta
 		String pageStartStr = request.getParameter("pageStart");
-        String albumIdStr = request.getParameter("id_album");
+        String albumIdStr = request.getParameter("albumId");
         System.out.println(albumIdStr);
         int albumId;
 
@@ -102,6 +102,7 @@ public class GoToAlbumPage extends HttpServlet {
         }
         // Salva l'oggetto Album come attributo della richiesta
         request.setAttribute("album", album);
+        request.setAttribute("albumId", (int)album.getId_album());
         request.setAttribute("pageStart", pageStart);
         
         // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)

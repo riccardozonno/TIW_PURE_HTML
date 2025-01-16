@@ -30,7 +30,7 @@ public class CommentoDAO {
  	        result = statement.executeQuery();
 
  	        if (result.next()) 
- 	        	commento = new Commento(id, result.getString("testo"), result.getInt("proprietario"), result.getInt("id_im"), result.getTimestamp("data_c"));
+ 	        	commento = new Commento(id, result.getString("testo"), result.getInt("proprietario"), result.getInt("id_im"), result.getTimestamp("data_c"), result.getString("username"));
  	    } catch (SQLException e) {
  	        throw new SQLException("Error accessing the DB when " + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {
@@ -55,40 +55,42 @@ public class CommentoDAO {
 	    return commento;
     }
 
-    
-    // Metodo per raddoppiare la dimensione dell'array
- 	private Commento[] resizeArray(Commento[] original) {
- 	    int newSize = original.length * 2;
- 	    Commento[] newArray = new Commento[newSize];
- 	    System.arraycopy(original, 0, newArray, 0, original.length);
- 	    return newArray;
- 	}
-
- 	// Metodo per tagliare l'array alla dimensione esatta
- 	private Commento[] trimArray(Commento[] original, int size) {
- 	    Commento[] trimmedArray = new Commento[size];
- 	    System.arraycopy(original, 0, trimmedArray, 0, size);
- 	    return trimmedArray;
- 	}
- 	
- 	private void closeResources(ResultSet resultSet, PreparedStatement statement) throws SQLException {
- 	    if (resultSet != null) {
- 	        try {
- 	            resultSet.close();
- 	        } catch (SQLException e) {
- 	            throw new SQLException("Error closing ResultSet: " + e.getMessage());
- 	        }
+	public void createCommento(String commento, int id_user, int id_immagine, String username) throws SQLException {
+		String performedAction = "insert a new comment";
+        String query = "INSERT INTO commento (testo, proprietario, id_im, username) VALUES (?, ?, ?, ?)";
+        PreparedStatement statement = null;
+        try  {
+        	statement = connection.prepareStatement(query);
+            statement.setString(1, commento);
+            statement.setInt(2, id_user);
+            statement.setInt(3, id_immagine);
+            statement.setString(4, username);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+ 	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+ 	    } finally {
+ 	        statement.close();
  	    }
- 	    if (statement != null) {
- 	        try {
- 	            statement.close();
- 	        } catch (SQLException e) {
- 	            throw new SQLException("Error closing PreparedStatement: " + e.getMessage());
- 	        }
- 	    }
- 	}
+    }
 
 	
+	
+	public void deleteAllCommentsByImageId(int id_immagine) throws SQLException {
+		// TODO Auto-generated method stub
+		String performedAction = "deleting all comment of an image ";
+	    String query = "DELETE FROM commento WHERE id_im = ?";
+	    PreparedStatement statement = null;
+	    try {
+	    	statement = connection.prepareStatement(query);
+	        statement.setInt(1, id_immagine);
+	        statement.executeUpdate();
+	    }catch (SQLException e) {
+	            throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+	    } finally {
+	    	statement.close();
+	    }
+	}
+	
 
-
+	
 }

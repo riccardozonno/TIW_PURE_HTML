@@ -369,6 +369,20 @@ public class AlbumDAO {
  	        }
  	    }
  	}
-
+ 	
+ 	public void decrementAlbumImageCount(int imageId) throws SQLException {
+		String performedAction = "updating totale_immagini when deleting a image";
+	    String query = "UPDATE album SET totale_immagini = totale_immagini - 1 WHERE id_album = (SELECT id_alb FROM image_album WHERE id_ima = ?)";
+	    PreparedStatement statement = null;
+	    try {
+	    	statement = connection.prepareStatement(query);
+	        statement.setInt(1, imageId);
+	        statement.executeUpdate();
+	        }catch (SQLException e) {
+	        	throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+	        } finally {
+	     		statement.close();
+            }
+	}
  	
 }
