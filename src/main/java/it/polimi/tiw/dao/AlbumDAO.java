@@ -272,9 +272,10 @@ public class AlbumDAO {
  	    PreparedStatement statement = null;
  	    ResultSet result = null;
  	    Album album = null;
- 	    Album[] allAlbum = new Album[5];  // Inizializzo l'array con 5 posizioni
+ 	    Album[] allAlbum = null;  // Inizializzo l'array con 5 posizioni
  	    PreparedStatement statement2 = null;
  	    ResultSet result2 = null;
+ 	    boolean alb = false;
 
  	    try {
  	        String query1 = "SELECT * FROM album WHERE creatore = ? ORDER BY album.data_creazione DESC";
@@ -285,6 +286,10 @@ public class AlbumDAO {
  	        int i = 0;  // Indice per scorrere l'array
 
  	        while (result.next()) {
+ 	        	if(i==0) {
+ 	        		alb = true;
+ 	        		allAlbum = new Album[5];
+ 	        	}
  	            // Se l'array è pieno, lo raddoppio
  	            if (i == allAlbum.length) {
  	                allAlbum = resizeArray(allAlbum);
@@ -325,8 +330,10 @@ public class AlbumDAO {
  	        }
 
  	        // Ridimensiono l'array alla dimensione esatta
+ 	        if(alb) {
  	        allAlbum = trimArray(allAlbum, i);
-
+ 	        }
+ 	        
  	    } catch (SQLException e) {
  	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {

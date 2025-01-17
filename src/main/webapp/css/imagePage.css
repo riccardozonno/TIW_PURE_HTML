@@ -1,18 +1,32 @@
 /* Pulsante Home */
-.btn-home {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+.button-back-to {
+    display: flex;
+    justify-content: center; /*space-between*/
+    align-items: center;
+    width: 60%;
+    margin: 20px auto;
+    
+}
+
+.btn-home, .btn-album {
     background-color: #007BFF;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-left: 10 px;
 }
 
-.btn-home:hover {
+.btn-home:hover, .btn-album:hover {
     background-color: #0056b3;
+}
+
+.image-details{
+	text-align: center;
+    margin-top: 20px;
 }
 
 /* Immagine a schermo intero */
@@ -31,6 +45,7 @@
 
 /* Pulsante per eliminare la foto */
 .btn-delete {
+	display: block;
     background-color: #dc3545;
     color: white;
     padding: 10px 20px;
@@ -38,6 +53,7 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 20px;
+    margin: 20px auto 0 auto;
 }
 
 .btn-delete:hover {
@@ -64,14 +80,17 @@
 
 /* Form Aggiungi Commento */
 .add-comment textarea {
-    width: 100%;
+    width: 70%;
     height: 80px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    display: block;
+    margin: 0 auto;  /* Centra orizzontalmente */
 }
 
 .btn-comment {
+	display: block;
     background-color: #28a745;
     color: white;
     padding: 10px 20px;
@@ -79,6 +98,8 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+    margin: 0 auto;
+    
 }
 
 .btn-comment:hover {

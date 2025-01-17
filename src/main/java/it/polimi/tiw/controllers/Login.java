@@ -97,7 +97,8 @@ public class Login extends HttpServlet {
 
 		} catch (SQLException e) {
 
-			forwardToErrorPage(request, response, e.getMessage());
+			request.setAttribute("warning", "Email or password incorrect!");
+			forward(request, response, "/WEB-INF/login.html");
 			return;
 		}
 
@@ -106,7 +107,7 @@ public class Login extends HttpServlet {
 		if (user == null) {
 
 			request.setAttribute("warning", "Email or password incorrect!");
-			forward(request, response, "/login");
+			forward(request, response, "/WEB-INF/login.html");
 			return;
 		}
 
@@ -129,7 +130,7 @@ public class Login extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/error.html");
+		forward(request, response, "/WEB-INF/error.html");
 		return;
 	}
 

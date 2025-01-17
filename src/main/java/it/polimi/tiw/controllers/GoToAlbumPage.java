@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -61,6 +62,13 @@ public class GoToAlbumPage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+
+        // Verifica se l'utente è loggato
+        if (session == null || session.getAttribute("currentUser") == null) {
+            response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
+            return;
+        }
 		// TODO Auto-generated method stub
 		 // Ottieni l'ID dell'album dai parametri della richiesta
 		String pageStartStr = request.getParameter("pageStart");
@@ -102,11 +110,11 @@ public class GoToAlbumPage extends HttpServlet {
         }
         // Salva l'oggetto Album come attributo della richiesta
         request.setAttribute("album", album);
-        request.setAttribute("albumId", (int)album.getId_album());
+        request.getSession().setAttribute("albumId", (int)album.getId_album());
         request.setAttribute("pageStart", pageStart);
         
         // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
-        forward(request, response,"/albumPage.html");
+        forward(request, response,"/WEB-INF/albumPage.html");
     }
 
 	/**
@@ -130,7 +138,7 @@ public class GoToAlbumPage extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/error.html");
+		forward(request, response, "/WEB-INF/error.html");
 		return;
 	}
 	

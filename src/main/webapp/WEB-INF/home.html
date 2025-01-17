@@ -12,7 +12,8 @@
     <!--  Pulsante Logout (in alto a destra) -->
     <button class="btn-logout" onclick="window.location.href='Logout'">Logout</button>
    
-    <div class="home-title">Welcome to your home, <span th:text="${session.currentUser.username}">user</span></div>
+    <div class="home-title" th:text="'Welcome to your home, ' + ${session.currentUser.username}">Welcome to your home, user</div>
+    
     <div class="home-subtitle">Nice to see you again!</div>
     
 
@@ -21,7 +22,7 @@
     <h3>My Gallery</h3>
 
     <!-- Form di caricamento immagine -->
-    <form id="uploadForm" method="post" action="UploadPhotoFromHome" enctype="multipart/form-data">
+    <form id="uploadForm" method="post" th:action="@{/UploadPhoto(inAlbum=false)}" enctype="multipart/form-data">
         <label for="title">Titolo:</label><br>
         <input type="text" id="title" name="title" placeholder="Inserisci il titolo" required><br><br>
 
@@ -35,13 +36,20 @@
     </form>
 
     <hr>
-
+    <div>
+    <h3>My Images</h3>
+    </div>
     <!-- Galleria di immagini -->
     <div class="image-gallery">
+    <div th:if="${myImages != null and myImages.length > 0}">
         <!-- Ciclo per visualizzare le immagini -->
         <div class="image-item" th:each="image : ${myImages}">
-                <img th:src="@{${image.percorso}}" th:alt="${image.titolo}" />
+                <img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
             <p th:text="${image.titolo}">Titolo immagine</p>
+        </div>
+    </div>
+     <div th:if="${myImages == null}">
+            <p>No images found.</p>
         </div>
     </div>
 </div>

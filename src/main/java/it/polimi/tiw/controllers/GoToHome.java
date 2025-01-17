@@ -68,8 +68,15 @@ public class GoToHome extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		// Gets the current user from the session
 		HttpSession session = request.getSession(false);
+
+        // Verifica se l'utente è loggato
+        if (session == null || session.getAttribute("currentUser") == null) {
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
+            return;
+        }
 		User currentUser = (User) session.getAttribute("currentUser");
 	
 
@@ -112,8 +119,8 @@ public class GoToHome extends HttpServlet {
 		if(userImmagini != null) {
 			request.setAttribute("myImages", userImmagini);
 			}else
-				request.setAttribute("myAlbums", null);
-		forward(request, response, "/home.html");
+				request.setAttribute("myImages", null);
+		forward(request, response, "/WEB-INF/home.html");
 	}
 
 	/**
@@ -139,7 +146,7 @@ public class GoToHome extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/error.html");
+		forward(request, response, "/WEB-INF/error.html");
 		return;
 	}
 

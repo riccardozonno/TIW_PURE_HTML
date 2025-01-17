@@ -8,16 +8,17 @@
 </head>
 
 <body>
-
+	<div class="button-back-to">
     <!-- Bottone Album -->
     <a th:href="@{/GoToHome}">
-    	<button type="button">Back to Home</button>
+    	<button class="btn btn-home">Back to Home</button>
 	</a>
     
     <!-- Bottone Album -->
     <a th:href="@{/GoToAlbumPage(albumId=${albumId})}">
-    	<button type="button">Back to Album</button>
+    	<button class="btn btn-album">Back to Album</button>
 	</a>
+	</div>
 
     <!-- Titolo e Descrizione della Foto -->
     <div class="image-details">
@@ -27,17 +28,10 @@
 
     <!-- Visualizzazione dell'Immagine -->
     <div class="image-container">
-        <img th:src="@{${image.percorso}}" alt="Immagine Non Trovata" class="full-image"/>
+        <img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" alt="Immagine Non Trovata" class="full-image"/>
     </div>
 
-    <!-- Bottone per Eliminare la Foto (visibile solo al proprietario) -->
-    <div th:if="${session.currentUser.id_user == image.id_user_proprietario}">
-        <form th:action="@{/DeletePhoto(albumId=${albumId}, imageId=${image.id_immagine})}" method="post">
-            <input type="hidden" name="imageId" th:value="${image.id_immagine}" />
-            <input type="hidden" name="albumId" th:value="${albumId}" />
-            <button type="submit" class="btn btn-delete">Elimina Foto</button>
-        </form>
-    </div>
+    
 
     <!-- Sezione Commenti -->
     <div class="comments-section">
@@ -65,6 +59,15 @@
             <input type="hidden" name="albumId" th:value="${albumId}" />
             <textarea name="testo" placeholder="Scrivi il tuo commento qui..." required></textarea><br>
             <button type="submit" class="btn btn-comment">Invia Commento</button>
+        </form>
+    </div>
+    
+    <!-- Bottone per Eliminare la Foto (visibile solo al proprietario) -->
+    <div th:if="${session.currentUser.id_user == image.id_user_proprietario}">
+        <form th:action="@{/DeletePhoto(albumId=${albumId}, imageId=${image.id_immagine})}" method="post">
+            <input type="hidden" name="imageId" th:value="${image.id_immagine}" />
+            <input type="hidden" name="albumId" th:value="${albumId}" />
+            <button type="submit" class="btn btn-delete">Elimina Foto</button>
         </form>
     </div>
 

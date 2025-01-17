@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
@@ -23,7 +21,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.beans.User;
-import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.TemplateHandler;
@@ -33,7 +30,7 @@ import it.polimi.tiw.utils.TemplateHandler;
  */
 @WebServlet("/UploadPhotoFromHome")
 @MultipartConfig(
-	    fileSizeThreshold = 1024 * 50,  // 50KB
+	    fileSizeThreshold = 1024 * 1,  // 1KB
 	    maxFileSize = 1024 * 1024 * 10,      // 10MB
 	    maxRequestSize = 1024 * 1024 * 50    // 50MB
 	)
@@ -57,7 +54,7 @@ public class UploadPhotoFromHome extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect("/login.html");
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
 
@@ -108,7 +105,7 @@ public class UploadPhotoFromHome extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/error.html");
+		forward(request, response, "/WEB-INF/error.html");
 		return;
 	}
 

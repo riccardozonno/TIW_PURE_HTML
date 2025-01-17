@@ -47,7 +47,7 @@ public class AddComment extends HttpServlet {
 
         // Verifica se l'utente è loggato
         if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect("login.html");
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
 		// TODO Auto-generated method stub
@@ -92,7 +92,7 @@ public class AddComment extends HttpServlet {
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
 
         request.setAttribute("error", error);
-        forward(request, response, "/error.html");
+        forward(request, response, "/WEB-INF/error.html");
         return;
     }
 

@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
@@ -30,9 +28,10 @@ import it.polimi.tiw.utils.TemplateHandler;
 
 @WebServlet("/UploadPhoto")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 50,  // 50KB
+    fileSizeThreshold = 1024 * 1,  // 1KB
     maxFileSize = 1024 * 1024 * 10,      // 10MB
     maxRequestSize = 1024 * 1024 * 50    // 50MB
+    //location = "/TIW_PURE_HTML/src/main/webapp/static/res"
 )
 public class UploadPhoto extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -55,17 +54,27 @@ public class UploadPhoto extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect("login.html");
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
         
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        int albumId = Integer.parseInt(request.getParameter("albumId"));
+        
+        String inAlbumStr = request.getParameter("inAlbum");
+        System.out.println(inAlbumStr);
+        boolean inAlbum = Boolean.parseBoolean(inAlbumStr);
+
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
 
      // Percorso corretto per salvare le immagini
-        String uploadPath = getServletContext().getRealPath("/static/res");
+        //String uploadPath = getServletContext().getRealPath("/static/res");
+        String uploadFilePath = "/Users/riccardozonno/res_html";
+        // creates upload folder if it does not exists
+        File uploadFolder = new File(uploadFilePath);
+        if (!uploadFolder.exists()) {
+            uploadFolder.mkdirs();
+        }
 
         Random random = new Random();
 
@@ -78,8 +87,8 @@ public class UploadPhoto extends HttpServlet {
         try {
             Part filePart = request.getPart("file");
             String fileName = rand + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String filePath = uploadPath + File.separator + fileName;
-            System.out.println("Percorso di upload: " + uploadPath);
+            String filePath = uploadFolder + File.separator + fileName;
+            System.out.println("Percorso di upload: " + filePath);
             System.out.println("ciao");
 
             filePart.write(filePath);
@@ -90,10 +99,15 @@ public class UploadPhoto extends HttpServlet {
                 System.err.println("Errore: il file non è stato scritto.");
             }
             
-            String dbPath =  "static/res/" + fileName;
+            String dbPath =  "/Users/riccardozonno/res_html" + "/" + fileName;
 
             int imageId = immagineDAO.insertImageData(title, description, dbPath, userId);
 
+            if(!inAlbum) {
+            	response.sendRedirect(getServletContext().getContextPath() + "/GoToHome");
+            	return;
+            }
+            int albumId = (int)(request.getSession().getAttribute("albumId"));
             immagineDAO.linkImageToAlbum(imageId, albumId, userId);
 
             // Aggiornamento del totale immagini nell'album
@@ -119,7 +133,7 @@ public class UploadPhoto extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/error.html");
+		forward(request, response, "/WEB-INF/error.html");
 		return;
 	}
 

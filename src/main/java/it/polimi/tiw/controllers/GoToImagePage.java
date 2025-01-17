@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -51,6 +52,13 @@ public class GoToImagePage extends HttpServlet {
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+
+        // Verifica se l'utente è loggato
+        if (session == null || session.getAttribute("currentUser") == null) {
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
+            return;
+        }
 		
        String imageIdStr = request.getParameter("imageId");
        String albumIdStr = request.getParameter("albumId");
@@ -97,7 +105,7 @@ public class GoToImagePage extends HttpServlet {
        request.setAttribute("albumId", albumId);
        
        // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
-       forward(request, response,"/imagePage.html");
+       forward(request, response,"/WEB-INF/imagePage.html");
    }
 
 	
@@ -116,7 +124,7 @@ public class GoToImagePage extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setAttribute("error", error);
-		forward(request, response, "/error.html");
+		forward(request, response, "/WEB-INF/error.html");
 		return;
 	}
 

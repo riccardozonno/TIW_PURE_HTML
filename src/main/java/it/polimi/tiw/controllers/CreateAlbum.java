@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -73,6 +74,13 @@ public class CreateAlbum extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+
+        // Verifica se l'utente è loggato
+        if (session == null || session.getAttribute("currentUser") == null) {
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
+            return;
+        }
 
         // Tries to register the user, if the function returns null ends (registerUser already re-directed)
     	Album album = createAlbum(request, response);
@@ -116,7 +124,7 @@ public class CreateAlbum extends HttpServlet {
         if (titolo.length() <= 0 || titolo.length() > 49) {
 
             request.setAttribute("warning", "Chosen title invalid (a valid title has more than one character and less than 50)!");
-            forward(request, response, "/home.html");
+            forward(request, response, "/WEB-INF/home.html");
             return null;
         }
         
@@ -214,7 +222,7 @@ public class CreateAlbum extends HttpServlet {
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
 
         request.setAttribute("error", error);
-        forward(request, response, "/error.html");
+        forward(request, response, "/WEB-INF/error.html");
         return;
     }
 

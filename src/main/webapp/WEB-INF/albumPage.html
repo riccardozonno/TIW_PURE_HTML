@@ -22,9 +22,8 @@
                 <!-- Ciclo per mostrare fino a 5 immagini -->
                 <td th:each="image, iterStat : ${album.immagini}"
     				th:if="${iterStat.index >= pageStart and iterStat.index < pageStart + 5}">
-    				<p th:text="${image.percorso}">Percorso immagine non trovato</p>
    					 <a th:href="@{/GoToImagePage(imageId=${image.id_immagine}, albumId=${album.id_album})}">
-       				<img th:src="@{${image.percorso}}" alt="Image Thumbnail" width="150" height="150"/>
+       				<img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" alt="Image Thumbnail" width="150" height="150"/>
        				</a>
        				 <div th:text="${image.titolo}">Titolo Immagine</div>
 				</td>
@@ -55,8 +54,8 @@
     <!-- Form di Upload (nascosto di default) -->
     <div id="uploadForm" th:if="${session.currentUser.id_user == album.id_user_proprietario}">
         <h3>Carica una nuova immagine</h3>
-        <form method="post" action="UploadPhoto" enctype="multipart/form-data">
-            <input type="hidden" name="albumId" th:value="${album.id_album}" />
+        <form method="post" th:action="@{/UploadPhoto(inAlbum=true)}" enctype="multipart/form-data">
+            <input type="hidden" name="albumId" th:value="${albumId}" />
 
             <label for="title">Titolo:</label>
             <input type="text" id="title" name="title" required /><br><br>

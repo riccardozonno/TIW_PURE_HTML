@@ -49,7 +49,13 @@ public class DeletePhoto extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+		HttpSession session = request.getSession(false);
+
+        // Verifica se l'utente è loggato
+        if (session == null || session.getAttribute("currentUser") == null) {
+        	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
+            return;
+        }
 		String albumIdStr =  request.getParameter("albumId");
 		String imageIdStr =  request.getParameter("imageId");
 		int id_image;
@@ -112,7 +118,7 @@ public class DeletePhoto extends HttpServlet {
 	   private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
 
 	        request.setAttribute("error", error);
-	        forward(request, response, "/error.html");
+	        forward(request, response, "/WEB-INF/error.html");
 	        return;
 	    }
 
@@ -143,17 +149,17 @@ public class DeletePhoto extends HttpServlet {
 	    
 	    private void deletePhysicalFile(ServletContext context, String filePath) {
 	        // Percorso assoluto del file
-	        String absolutePath = context.getRealPath("") + File.separator + filePath;
-	        File file = new File(absolutePath);
+	        
+	        File file = new File(filePath);
 
 	        if (file.exists()) {
 	            if (file.delete()) {
-	                System.out.println("File eliminato: " + absolutePath);
+	                System.out.println("File eliminato: " + filePath);
 	            } else {
-	                System.out.println("Errore durante l'eliminazione del file: " + absolutePath);
+	                System.out.println("Errore durante l'eliminazione del file: " + filePath);
 	            }
 	        } else {
-	            System.out.println("Il file non esiste: " + absolutePath);
+	            System.out.println("Il file non esiste: " + filePath);
 	        }
 	    }
 	    
