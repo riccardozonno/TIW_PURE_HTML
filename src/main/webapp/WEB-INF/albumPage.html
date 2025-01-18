@@ -15,6 +15,14 @@
     <!-- Titolo dell'album -->
     <h1 th:text="${album.titolo}">Titolo dell'Album</h1>
     
+    <!-- Navigazione tra le pagine di immagini -->
+    <div class="pagination">
+        <!-- Bottone Precedenti -->
+        <a th:if="${pageStart > 0}"
+   th:href="@{/GoToAlbumPage(albumId=${album.id_album}, pageStart=${pageStart - 5})}">
+    <button class="btn btn-previous">Precedenti</button>
+	</a>
+
     <!-- Tabella delle immagini -->
     <div class="image-table">
         <table>
@@ -38,13 +46,6 @@
         </table>
     </div>
 
-    <!-- Navigazione tra le pagine di immagini -->
-    <div class="pagination">
-        <!-- Bottone Precedenti -->
-        <a th:if="${pageStart > 0}"
-   th:href="@{/GoToAlbumPage(albumId=${album.id_album}, pageStart=${pageStart - 5})}">
-    <button class="btn btn-previous">Precedenti</button>
-	</a>
        <a th:if="${pageStart + 5 < album.totale_immagini}"
    th:href="@{/GoToAlbumPage(albumId=${album.id_album}, pageStart=${pageStart + 5})}">
     <button class="btn btn-next">Successive</button>

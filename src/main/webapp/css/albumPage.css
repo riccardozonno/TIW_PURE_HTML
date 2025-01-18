@@ -44,8 +44,8 @@ h1 {
 
 /* Tabella delle immagini */
 .image-table table {
-    width: 80%;
-    margin: 0 auto;
+    width: 100%;
+    margin: 20px 0; /* Margine sopra e sotto */
     border-collapse: collapse;
 }
 
@@ -73,13 +73,13 @@ h1 {
 /* Navigazione tra le pagine */
 .pagination {
     display: flex;
-    justify-content: center; /*space-between*/
+    justify-content: space-around; /* Bottoni ai lati */
     align-items: center;
-    width: 60%;
-    margin: 20px auto;
-    
+    margin-top: 20px;
+    padding: 10px 0;
 }
 
+/* Bottoni Precedenti e Successive */
 .btn-previous, .btn-next {
     background-color: #007BFF;
     color: white;
@@ -88,13 +88,18 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    margin-right: 10px;
-    margin-left: 10 px;
+    margin: 10px; /* Spazio dai lati */
 }
 
 .btn-previous:hover, .btn-next:hover {
     background-color: #0056b3;
 }
+
+/* Fix: Aggiungiamo un margine extra sotto la tabella */
+.image-table {
+    margin-bottom: 30px; /* Spazio tra tabella e bottone Successive */
+}
+
 
 /* Form di Upload */
 #uploadForm {
