@@ -115,7 +115,6 @@ public class ImmagineDAO {
  	    ResultSet result = null;
  	    Immagine immagine = null;
  	    Immagine[] allPhotos = new Immagine[5];  // Inizializzo l'array con 5 posizioni
- 	    CommentoDAO commentoDAO = new CommentoDAO(connection);
 
  	    try {
  	        String query1 = "SELECT * FROM immagine WHERE proprietario = ? ORDER BY immagine.data_c DESC";
@@ -310,6 +309,93 @@ public class ImmagineDAO {
 			}
  	    }
     }
+	
+	public Immagine[] getAllUserImageExceptAlbum(int userId, int albumId) throws SQLException {
+ 	    String performedAction = " finding all images of a user except images in album " + albumId;
+ 	    PreparedStatement statement = null;
+ 	    ResultSet result = null;
+ 	    PreparedStatement statement2 = null;
+ 	    ResultSet result2 = null;
+ 	    Immagine immagine = null;
+ 	    Immagine[] allPhotos = new Immagine[5];  // Inizializzo l'array con 5 posizioni
+ 	    
+ 	    
+ 	    try {
+ 	    	String query1 = "SELECT i1.* "
+ 	    			+ "FROM immagine AS i1 "
+ 	    			+ "LEFT JOIN image_album AS ia ON i1.id_image = ia.id_ima "
+ 	    			+ "AND ia.id_alb = ? "
+ 	    			+ "WHERE i1.proprietario = ? "
+ 	    			+ "AND ia.id_ima IS NULL";
+
+
+ 	        		
+ 	        statement = connection.prepareStatement(query1);
+ 	        statement.setInt(1, albumId);
+ 	        statement.setInt(2, userId);
+ 	        result = statement.executeQuery();
+
+ 	        int i = 0;  // Indice per scorrere l'array
+
+ 	        while (result.next()) {
+ 	        	
+ 	            // Se l'array è pieno, lo raddoppio
+ 	            if (i == allPhotos.length) {
+ 	                allPhotos = resizeArray(allPhotos);
+ 	            }
+
+ 	            String titolo = result.getString("titolo");
+ 	            int id_user_proprietario = result.getInt("proprietario");
+ 	            Timestamp data = result.getTimestamp("data_c");
+ 	            String descrizione= result.getString("descrizione");
+ 	            String percorso = result.getString("percorso");
+ 	            int id_immagine = result.getInt("id_image");
+ 	            int totale_commenti = result.getInt("totale_commenti");
+ 	           Commento[] commenti = new Commento[totale_commenti];
+ 	            
+ 	            //recupero commenti foto se esistono
+ 	            if(totale_commenti > 0) {
+ 	            	try {
+ 	            	int j = 0;
+ 	            	String query2 = "SELECT * FROM commento WHERE id_im = ?";
+	                statement2 = connection.prepareStatement(query2);
+	                statement2.setInt(1, id_immagine);
+	                result2 = statement2.executeQuery();
+ 	            	int[] id_commenti = new int[totale_commenti];
+ 	            	
+ 	            	CommentoDAO commentoDAO = new CommentoDAO(connection);
+ 	            	
+	                while (result2.next()) {
+	                    id_commenti[j] = result2.getInt("id_ima");
+	                    j++;
+	                }
+ 	            
+ 	            	for(int k = 0; k < totale_commenti; k++) {
+ 	            		commenti[k] = commentoDAO.getCommentoById(id_commenti[k]);
+ 	            	}
+ 	            	}catch (SQLException e) {
+ 	        	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+ 	        	    } finally {
+ 	        	        closeResources(result2, statement2);
+ 	        	    }
+ 	            }       
+ 	            
+ 	            //TODO for per riempire array commenti con i commenti
+ 	            immagine = new Immagine(id_immagine, titolo, descrizione, percorso, id_user_proprietario, data, commenti);
+ 	            allPhotos[i] = immagine;
+ 	            i++;
+ 	        }
+ 	        // Ridimensiono l'array alla dimensione esatta
+ 	        allPhotos = trimArray(allPhotos, i);
+
+ 	    } catch (SQLException e) {
+ 	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
+ 	    } finally {
+ 	        closeResources(result, statement);
+ 	        
+ 	    }
+ 	    return allPhotos;
+ 	}
 	
 
 	

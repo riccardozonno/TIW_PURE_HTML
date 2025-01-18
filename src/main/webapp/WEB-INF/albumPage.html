@@ -70,5 +70,28 @@
         </form>
     </div>
 
+
+<div class="myImages" th:if="${session.currentUser.id_user == album.id_user_proprietario}">
+	<div>
+    <h3>My Images</h3>
+    </div>
+    <!-- Galleria di immagini -->
+    
+    <div class="image-gallery" th:if="${gallery != null and gallery.length > 0}">
+    
+        <!-- Ciclo per visualizzare le immagini -->
+        <div class="image-item" th:each="image : ${gallery}">
+        	<a th:href="@{/AddImageToAlbum(imageId=${image.id_immagine})}">
+        	<img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
+        	</a>
+            <p th:text="${image.titolo}">Titolo immagine</p>
+        </div>
+    
+     <div th:if="${gallery == null}">
+            <p>No images found.</p>
+        </div>
+    </div>
+   </div> 
+
 </body>
 </html>

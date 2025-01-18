@@ -3,6 +3,8 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,7 +18,10 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Immagine;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.TemplateHandler;
 
@@ -73,6 +78,7 @@ public class GoToAlbumPage extends HttpServlet {
 		 // Ottieni l'ID dell'album dai parametri della richiesta
 		String pageStartStr = request.getParameter("pageStart");
         String albumIdStr = request.getParameter("albumId");
+        int userId = ((User) session.getAttribute("currentUser")).getId_user();
         System.out.println(albumIdStr);
         int albumId;
 
@@ -108,12 +114,23 @@ public class GoToAlbumPage extends HttpServlet {
                 pageStart = 0;  // Se non valido, imposto a 0
             }
         }
+        
+        // Recupera le foto non in quell'album, sempre dell'utente
+        ImmagineDAO immagineDAO = new ImmagineDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
+        Immagine[] immagine;
+        try {
+			immagine = immagineDAO.getAllUserImageExceptAlbum(userId, albumId);
+		} catch (SQLException e) {
+			forwardToErrorPage(request, response, e.getMessage());
+			return;
+		}
         // Salva l'oggetto Album come attributo della richiesta
+        request.setAttribute("gallery", immagine);
         request.setAttribute("album", album);
         request.getSession().setAttribute("albumId", (int)album.getId_album());
         request.setAttribute("pageStart", pageStart);
         
-        // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
+        // Reindirizza alla pagina album
         forward(request, response,"/WEB-INF/albumPage.html");
     }
 
@@ -159,5 +176,7 @@ public class GoToAlbumPage extends HttpServlet {
 		templateEngine.process(path, ctx, response.getWriter());
 
 	}
+	
+
 
 }

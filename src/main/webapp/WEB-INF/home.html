@@ -40,14 +40,17 @@
     <h3>My Images</h3>
     </div>
     <!-- Galleria di immagini -->
-    <div class="image-gallery">
-    <div th:if="${myImages != null and myImages.length > 0}">
+    <div class="image-gallery" th:if="${myImages != null and myImages.length > 0}">
+    
         <!-- Ciclo per visualizzare le immagini -->
-        <div class="image-item" th:each="image : ${myImages}">
-                <img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
-            <p th:text="${image.titolo}">Titolo immagine</p>
-        </div>
-    </div>
+		<div class="image-item" th:each="image : ${myImages}">
+   	 		
+       		 <img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
+    		
+    	
+</div>
+
+    
      <div th:if="${myImages == null}">
             <p>No images found.</p>
         </div>

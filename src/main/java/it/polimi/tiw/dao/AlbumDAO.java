@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Immagine;
@@ -66,6 +68,7 @@ public class AlbumDAO {
 	                }
 
 	                album.setId_immagini(id_immagini);
+	                album.setImmagini(orderImage(immagini));
 	                album.setImmagini(immagini);
 	            }
 	        }
@@ -321,8 +324,16 @@ public class AlbumDAO {
  	                    ImmagineDAO imageDao = new ImmagineDAO(connection);
  	                    immagini[k] = imageDao.getImageById(id_immagini[k]);
  	                }
-
- 	                album.setImmagini(immagini);
+ 	                
+ 	                System.out.println("stampo album prima di ordinamento ID: " + album.getId_album() );
+ 	                for(int a = 0; a < album.getTotale_immagini(); a++) {
+ 	                	System.out.println(immagini[a].getId_immagine());
+ 	                }
+ 	                album.setImmagini(orderImage(immagini));
+ 	               System.out.println("stampo album dopo ordinamento ID: " + album.getId_album() );
+	                for(int a = 0; a < album.getTotale_immagini(); a++) {
+	                	System.out.println(album.getImmagini()[a].getId_immagine());
+	                }
  	            }
 
  	            allAlbum[i] = album;
@@ -391,5 +402,20 @@ public class AlbumDAO {
 	     		statement.close();
             }
 	}
+ 	
+	private static Immagine[] orderImage(Immagine[] immagini) {
+        if (immagini == null || immagini.length == 0) {
+            return null;  // Se l'array è nullo o vuoto, esce senza fare nulla
+        }
+
+        Arrays.sort(immagini, new Comparator<Immagine>() {
+            @Override
+            public int compare(Immagine img1, Immagine img2) {
+                // Ordinamento per data_creazione in ordine decrescente
+                return img2.getData_creazione().compareTo(img1.getData_creazione());
+            }
+        });
+        return immagini;
+    }
  	
 }
