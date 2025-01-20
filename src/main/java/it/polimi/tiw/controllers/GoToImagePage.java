@@ -144,4 +144,19 @@ public class GoToImagePage extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		templateEngine.process(path, ctx, response.getWriter());
 	}
+	
+	@Override
+	public void destroy() {
+
+		try {
+
+			ConnectionHandler.closeConnection(connection);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

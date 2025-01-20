@@ -53,7 +53,7 @@ public class DownloadPhoto extends HttpServlet {
             File imageFile = new File(imagePath);
             String mimeType = getServletContext().getMimeType(imageFile.getName());
             if (mimeType == null) {
-                mimeType = "application/octet-stream";  // Tipo generico
+                mimeType = "application/octet-stream";  
             }
             response.setContentType(mimeType);
             response.setContentLengthLong(imageFile.length());
