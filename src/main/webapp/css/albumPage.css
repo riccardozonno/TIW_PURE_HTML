@@ -73,7 +73,7 @@ h1 {
 /* Navigazione tra le pagine */
 .pagination {
     display: flex;
-    justify-content: space-around; /* Bottoni ai lati */
+    justify-content: center; /* Bottoni ai lati */
     align-items: center;
     margin-top: 20px;
     padding: 10px 0;
