@@ -75,7 +75,6 @@ public class GoToAlbumPage extends HttpServlet {
 		String pageStartStr = request.getParameter("pageStart");
         String albumIdStr = request.getParameter("albumId");
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
-        System.out.println(albumIdStr);
         int albumId;
 
         try {
@@ -100,7 +99,6 @@ public class GoToAlbumPage extends HttpServlet {
         	forwardToErrorPage(request, response, "Album not found.");
             return;
         }
-        System.out.println(album.getTitolo());
 
         int pageStart = 0;
         if (pageStartStr != null && !pageStartStr.isEmpty()) {

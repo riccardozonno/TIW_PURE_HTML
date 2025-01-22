@@ -80,7 +80,6 @@ public class GoToImagePage extends HttpServlet {
        Immagine immagine;
 		try {
 			immagine = immagineDAO.getImageById(imageId);
-			System.out.println("GoToImagePage getImageById idImage: " + immagine.getId_immagine());
 		} catch (SQLException e) {
 			forwardToErrorPage(request, response, e.getMessage());
 			return;

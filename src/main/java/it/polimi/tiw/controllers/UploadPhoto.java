@@ -60,7 +60,6 @@ public class UploadPhoto extends HttpServlet {
         String description = request.getParameter("description");
         
         String inAlbumStr = request.getParameter("inAlbum");
-        System.out.println(inAlbumStr);
         boolean inAlbum = Boolean.parseBoolean(inAlbumStr);
 
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
@@ -81,13 +80,9 @@ public class UploadPhoto extends HttpServlet {
             Part filePart = request.getPart("file");
             String fileName = rand + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String filePath = uploadFolder + File.separator + fileName;
-            System.out.println("Percorso di upload: " + filePath);
-            System.out.println("ciao");
-
             filePart.write(filePath);
             File uploadedFile = new File(filePath);
             if (uploadedFile.exists()) {
-                System.out.println("File scritto correttamente: " + filePath);
             } else {
                 System.err.println("Errore: il file non è stato scritto.");
             }

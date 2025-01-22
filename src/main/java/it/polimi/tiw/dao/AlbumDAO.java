@@ -300,9 +300,6 @@ public class AlbumDAO {
  	                for(int a = 0; a < album.getTotale_immagini(); a++) {
  	                }
  	                album.setImmagini(orderImage(immagini));
-	                for(int a = 0; a < album.getTotale_immagini(); a++) {
-	                	System.out.println(album.getImmagini()[a].getId_immagine());
-	                }
  	            }
  	            allAlbum[i] = album;
  	            i++;

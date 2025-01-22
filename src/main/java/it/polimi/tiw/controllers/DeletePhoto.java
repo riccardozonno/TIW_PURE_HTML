@@ -143,13 +143,7 @@ public class DeletePhoto extends HttpServlet {
 	        File file = new File(filePath);
 
 	        if (file.exists()) {
-	            if (file.delete()) {
-	                System.out.println("File eliminato: " + filePath);
-	            } else {
-	                System.out.println("Errore durante l'eliminazione del file: " + filePath);
-	            }
-	        } else {
-	            System.out.println("Il file non esiste: " + filePath);
+	            file.delete();
 	        }
 	    }
 	    
