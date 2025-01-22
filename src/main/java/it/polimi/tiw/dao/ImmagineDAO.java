@@ -25,13 +25,10 @@ public class ImmagineDAO {
     	PreparedStatement statement2 = null;
     	ResultSet result = null;
     	ResultSet result2 = null;
-    	
     	Immagine immagine = null;
     	CommentoDAO commentoDAO = new CommentoDAO(connection);
     	
         try {
-
-            
             statement = connection.prepareStatement(query);
             statement.setInt(1, id_image);
             result = statement.executeQuery();   
@@ -44,7 +41,6 @@ public class ImmagineDAO {
                 int totaleCommenti = result.getInt("totale_commenti");
                 Commento[] commenti = null;
                 
-	            // Inizializza l'array di ID delle immagini
 	            if (totaleCommenti > 0) {
 	                int[] id_comm = new int[totaleCommenti];
 	                 commenti = new Commento[totaleCommenti];
@@ -57,10 +53,7 @@ public class ImmagineDAO {
 	                        while (result2.next() && index < totaleCommenti) {
 	                            id_comm[index] = result2.getInt("id_comm");
 	                            index++;
-	                    }
-	                
-	                // Carica le immagini dal database
-	                
+	                    }	                
 	                for (int i = 0; i < totaleCommenti; i++) {
 	                	commenti[i] = commentoDAO.getCommentoById(id_comm[i]);
 	                }
@@ -114,7 +107,7 @@ public class ImmagineDAO {
  	    PreparedStatement statement = null;
  	    ResultSet result = null;
  	    Immagine immagine = null;
- 	    Immagine[] allPhotos = new Immagine[5];  // Inizializzo l'array con 5 posizioni
+ 	    Immagine[] allPhotos = new Immagine[5];  
 
  	    try {
  	        String query1 = "SELECT * FROM immagine WHERE proprietario = ? ORDER BY immagine.data_c DESC";
@@ -122,11 +115,9 @@ public class ImmagineDAO {
  	        statement.setInt(1, id_user);
  	        result = statement.executeQuery();
 
- 	        int i = 0;  // Indice per scorrere l'array
+ 	        int i = 0;  
 
  	        while (result.next()) {
- 	        	
- 	            // Se l'array è pieno, lo raddoppio
  	            if (i == allPhotos.length) {
  	                allPhotos = resizeArray(allPhotos);
  	            }
@@ -138,19 +129,11 @@ public class ImmagineDAO {
  	            String percorso = result.getString("percorso");
  	            int id_immagine = result.getInt("id_image");
  	            int totale_commenti = result.getInt("totale_commenti");
- 	            Commento[] commenti = new Commento[totale_commenti];
- 	            
- 	            //TODO for per riempire arrai commenti con i commenti
- 	            
- 	            
-
+ 	            Commento[] commenti = new Commento[totale_commenti]; 	            
  	            immagine = new Immagine(id_immagine, titolo, descrizione, percorso, id_user_proprietario, data, commenti);
- 	            
  	            allPhotos[i] = immagine;
  	            i++;
  	        }
-
- 	        // Ridimensiono l'array alla dimensione esatta
  	        allPhotos = trimArray(allPhotos, i);
 
  	    } catch (SQLException e) {
@@ -158,7 +141,6 @@ public class ImmagineDAO {
  	    } finally {
  	        closeResources(result, statement);
  	    }
-
  	    return allPhotos;
  	}
 
@@ -221,7 +203,6 @@ public class ImmagineDAO {
  	    }
     }
 	
- // Metodo per raddoppiare la dimensione dell'array
  	private Immagine[] resizeArray(Immagine[] original) {
  	    int newSize = original.length * 2;
  	    Immagine[] newArray = new Immagine[newSize];
@@ -229,7 +210,6 @@ public class ImmagineDAO {
  	    return newArray;
  	}
 
- 	// Metodo per tagliare l'array alla dimensione esatta
  	private Immagine[] trimArray(Immagine[] original, int size) {
  	    Immagine[] trimmedArray = new Immagine[size];
  	    System.arraycopy(original, 0, trimmedArray, 0, size);
@@ -317,7 +297,7 @@ public class ImmagineDAO {
  	    PreparedStatement statement2 = null;
  	    ResultSet result2 = null;
  	    Immagine immagine = null;
- 	    Immagine[] allPhotos = new Immagine[5];  // Inizializzo l'array con 5 posizioni
+ 	    Immagine[] allPhotos = new Immagine[5];  
  	    
  	    
  	    try {
@@ -335,15 +315,11 @@ public class ImmagineDAO {
  	        statement.setInt(2, userId);
  	        result = statement.executeQuery();
 
- 	        int i = 0;  // Indice per scorrere l'array
-
+ 	        int i = 0;  
  	        while (result.next()) {
- 	        	
- 	            // Se l'array è pieno, lo raddoppio
  	            if (i == allPhotos.length) {
  	                allPhotos = resizeArray(allPhotos);
  	            }
-
  	            String titolo = result.getString("titolo");
  	            int id_user_proprietario = result.getInt("proprietario");
  	            Timestamp data = result.getTimestamp("data_c");
@@ -351,10 +327,9 @@ public class ImmagineDAO {
  	            String percorso = result.getString("percorso");
  	            int id_immagine = result.getInt("id_image");
  	            int totale_commenti = result.getInt("totale_commenti");
- 	           Commento[] commenti = new Commento[totale_commenti];
+ 	            Commento[] commenti = new Commento[totale_commenti];
  	            
- 	            //recupero commenti foto se esistono
- 	            if(totale_commenti > 0) {
+ 	           if(totale_commenti > 0) {
  	            	try {
  	            	int j = 0;
  	            	String query2 = "SELECT * FROM commento WHERE id_im = ?";
@@ -380,12 +355,10 @@ public class ImmagineDAO {
  	        	    }
  	            }       
  	            
- 	            //TODO for per riempire array commenti con i commenti
  	            immagine = new Immagine(id_immagine, titolo, descrizione, percorso, id_user_proprietario, data, commenti);
  	            allPhotos[i] = immagine;
  	            i++;
  	        }
- 	        // Ridimensiono l'array alla dimensione esatta
  	        allPhotos = trimArray(allPhotos, i);
 
  	    } catch (SQLException e) {
@@ -396,8 +369,6 @@ public class ImmagineDAO {
  	    }
  	    return allPhotos;
  	}
-	
-
 	
 
 }

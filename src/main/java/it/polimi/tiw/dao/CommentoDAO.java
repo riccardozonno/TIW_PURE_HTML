@@ -34,7 +34,6 @@ public class CommentoDAO {
  	    } catch (SQLException e) {
  	        throw new SQLException("Error accessing the DB when " + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {
- 	        // Chiude il ResultSet
  	        if (result != null) {
  	            try {
  	                result.close();
@@ -43,7 +42,6 @@ public class CommentoDAO {
  	            }
  	        }
 
- 	        // Chiude il PreparedStatement
  	        if (statement != null) {
  	            try {
  	                statement.close();
@@ -76,7 +74,6 @@ public class CommentoDAO {
 	
 	
 	public void deleteAllCommentsByImageId(int id_immagine) throws SQLException {
-		// TODO Auto-generated method stub
 		String performedAction = "deleting all comment of an image ";
 	    String query = "DELETE FROM commento WHERE id_im = ?";
 	    PreparedStatement statement = null;
