@@ -58,20 +58,24 @@ public class UserDAO {
 		String query = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
 
 		try {
-
+			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(query);
 			statement.setString(1, username);
 			statement.setString(2, email);
 			statement.setString(3, password);
 			statement.executeUpdate();
+			connection.commit();
 
 		} catch (SQLException e) {
+			connection.rollback();
 			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 		} finally {
 
 			try {
 
 				statement.close();
+				connection.setAutoCommit(true);
+
 
 			} catch (Exception e) {
 

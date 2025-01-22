@@ -136,21 +136,24 @@ public class AlbumDAO {
 		long generatedId = 0;
 
 		try {
-
+			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(query);
 			statement.setString(1, titolo);
 			statement.setInt(2, creatore);
             statement.executeUpdate();
             
+            
             statement2 = connection.prepareStatement(query2);
 			statement2.setString(1, titolo);
 			result = statement2.executeQuery();
+			connection.commit();
 			if (result.next()) {
 			    generatedId = result.getLong("id_album");
 			}
 			return generatedId;
 		}
 		 catch (SQLException e) {
+			 connection.rollback();
 			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 		} finally {
 			try {
@@ -159,6 +162,8 @@ public class AlbumDAO {
 				throw new SQLException(
 						"Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
+			connection.setAutoCommit(true);
+
 		}
 	}
  	
@@ -167,10 +172,13 @@ public class AlbumDAO {
         String query = "UPDATE album SET totale_immagini = totale_immagini + 1 WHERE id_album = ?";
         PreparedStatement statement = null;
         try  {
+        	connection.setAutoCommit(false);
         	statement = connection.prepareStatement(query);
             statement.setInt(1, albumId);
             statement.executeUpdate();
+            connection.commit();
         }catch (SQLException e) {
+        	connection.rollback();
 			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
         } finally {
         	try {
@@ -179,6 +187,8 @@ public class AlbumDAO {
 				throw new SQLException(
 						"Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");
 			}
+        	connection.setAutoCommit(true);
+
  	    }
     }
  	
@@ -351,13 +361,19 @@ public class AlbumDAO {
 	    String query = "UPDATE album SET totale_immagini = totale_immagini - 1 WHERE id_album = (SELECT id_alb FROM image_album WHERE id_ima = ?)";
 	    PreparedStatement statement = null;
 	    try {
+	    	connection.setAutoCommit(false);
 	    	statement = connection.prepareStatement(query);
 	        statement.setInt(1, imageId);
 	        statement.executeUpdate();
+	        connection.commit();
 	        }catch (SQLException e) {
+	        	connection.rollback();
 	        	throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 	        } finally {
+	        	
 	     		statement.close();
+	     		connection.setAutoCommit(true);
+
             }
 	}
  	

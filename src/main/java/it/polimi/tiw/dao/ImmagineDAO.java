@@ -149,15 +149,19 @@ public class ImmagineDAO {
         String query = "INSERT INTO image_album (id_ima, id_alb, id_use) VALUES (?, ?, ?)";
         PreparedStatement statement = null;
         try  {
+        	connection.setAutoCommit(false);
         	statement = connection.prepareStatement(query);
             statement.setInt(1, imageId);
             statement.setInt(2, albumId);
             statement.setInt(3, userId);
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
+        	connection.rollback();
  	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {
  	        statement.close();
+ 	       connection.setAutoCommit(false);
  	    }
     }
 	
@@ -166,13 +170,18 @@ public class ImmagineDAO {
         String query = "DELETE FROM image_album WHERE id_ima = ?";
         PreparedStatement statement = null;
         try  {
+        	connection.setAutoCommit(false);
         	statement = connection.prepareStatement(query);
             statement.setInt(1, imageId);
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
+        	connection.rollback();
  	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {
  	        statement.close();
+ 	       connection.setAutoCommit(true);
+
  	    }
     }
 	
@@ -182,13 +191,14 @@ public class ImmagineDAO {
         PreparedStatement statement = null;
    
         try  {
+        	connection.setAutoCommit(false);
         	statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, title);
             statement.setString(2, filePath);
             statement.setString(3, description);
             statement.setInt(4, userId);
             statement.executeUpdate();
-
+            connection.commit();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     return generatedKeys.getInt(1);
@@ -196,10 +206,14 @@ public class ImmagineDAO {
                 	throw new SQLException("Errore nell'inserimento dell'immagine, nessun ID generato.");
                 }
             }
+            
         } catch (SQLException e) {
+        	connection.rollback();
  	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {
  	        statement.close();
+ 	       connection.setAutoCommit(true);
+
  	    }
     }
 	
@@ -239,13 +253,18 @@ public class ImmagineDAO {
 	    String query = "DELETE FROM immagine WHERE id_image = ?";
 	    PreparedStatement statement = null;
 	    try {
+	    	connection.setAutoCommit(false);
 	    	statement = connection.prepareStatement(query);
 	        statement.setInt(1, imageId);
 	        statement.executeUpdate();
+	        connection.commit();
 	    }catch (SQLException e) {
+	    	connection.rollback();
 	            throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 	    } finally {
 	    	statement.close();
+	    	connection.setAutoCommit(true);
+
 	    }
 	}
 
@@ -275,14 +294,19 @@ public class ImmagineDAO {
         String query = "UPDATE immagine SET totale_commenti = totale_commenti + 1 WHERE id_image = ?";
         PreparedStatement statement = null;
         try  {
+        	connection.setAutoCommit(false);
         	statement = connection.prepareStatement(query);
             statement.setInt(1, id_immagine);
             statement.executeUpdate();
+            connection.commit();
         }catch (SQLException e) {
+        	connection.rollback();
 			throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
         } finally {
         	try {
 			statement.close();
+			connection.setAutoCommit(true);
+
 			} catch (Exception e) {
 				throw new SQLException(
 						"Error closing the statement when" + performedAction + "[ " + e.getMessage() + " ]");

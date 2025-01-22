@@ -56,33 +56,41 @@ public class CommentoDAO {
         String query = "INSERT INTO commento (testo, proprietario, id_im, username) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = null;
         try  {
+        	connection.setAutoCommit(false);
         	statement = connection.prepareStatement(query);
             statement.setString(1, commento);
             statement.setInt(2, id_user);
             statement.setInt(3, id_immagine);
             statement.setString(4, username);
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
+        	connection.rollback();
  	        throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
  	    } finally {
  	        statement.close();
+ 	       connection.setAutoCommit(true);
+
  	    }
     }
 
-	
-	
 	public void deleteAllCommentsByImageId(int id_immagine) throws SQLException {
 		String performedAction = "deleting all comment of an image ";
 	    String query = "DELETE FROM commento WHERE id_im = ?";
 	    PreparedStatement statement = null;
 	    try {
+	    	connection.setAutoCommit(false);
 	    	statement = connection.prepareStatement(query);
 	        statement.setInt(1, id_immagine);
 	        statement.executeUpdate();
+	        connection.commit();
 	    }catch (SQLException e) {
+	    	connection.rollback();
 	            throw new SQLException("Error accessing the DB when" + performedAction + "[ " + e.getMessage() + " ]");
 	    } finally {
 	    	statement.close();
+	    	connection.setAutoCommit(true);
+
 	    }
 	}
 	
