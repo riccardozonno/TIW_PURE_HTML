@@ -18,6 +18,34 @@
         <param-name>dbDriver</param-name>
         <param-value>com.mysql.cj.jdbc.Driver</param-value>
     </context-param>
+    <filter>
+  	<filter-name>CheckLoggedUser</filter-name>
+  	<filter-class>it.polimi.tiw.filters.CheckLoggedUser</filter-class>
+  </filter>
+  <filter>
+  	<filter-name>CheckNotLoggedUser</filter-name>
+  	<filter-class>it.polimi.tiw.filters.CheckNotLoggedUser</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>CheckLoggedUser</filter-name>
+  	<url-pattern>/GoToHome</url-pattern>
+  	<url-pattern>/CreateAlbum</url-pattern>
+  	<url-pattern>/GoToAlbumPage</url-pattern>
+  	<url-pattern>/AddImageToAlbum</url-pattern>
+  	<url-pattern>/GoToImagePage</url-pattern>
+  	<url-pattern>/AddComment</url-pattern>
+  	<url-pattern>/UploadPhoto</url-pattern>
+  	<url-pattern>/DownloadPhoto</url-pattern>
+  	<url-pattern>/DeletePhoto</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>CheckNotLoggedUser</filter-name>
+  	<url-pattern>/</url-pattern>
+  	<url-pattern>/GoToLoginPage</url-pattern>
+    <url-pattern>/Login</url-pattern>
+  	<url-pattern>/GoToRegisterPage</url-pattern>
+  	<url-pattern>/Register</url-pattern>	
+  </filter-mapping>
     <welcome-file-list>
         <welcome-file>GoToLoginPage</welcome-file>
     </welcome-file-list>
