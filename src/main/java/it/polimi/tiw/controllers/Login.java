@@ -35,7 +35,6 @@ public class Login extends HttpServlet {
 	 */
 	public Login() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -78,32 +77,22 @@ public class Login extends HttpServlet {
 
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-
-		// Verify if the given argument are null and if so forward to errorPage
 		if (email == null || password == null) {
 
 			forwardToErrorPage(request, response, "Null email or password");
 			return;
 		}
 
-		// Query DB to authenticate user
-		// If user not present, forward to ErrorPage
 		UserDAO userDAO = new UserDAO(connection);
 		User user = null;
-
 		try {
-
 			user = userDAO.getUserLog(email, password);
-
 		} catch (SQLException e) {
 
 			request.setAttribute("warning", "Email or password incorrect!");
 			forward(request, response, "/WEB-INF/login.html");
 			return;
 		}
-
-		// If the user exists, add info to the session and go to home page, otherwise
-		// show login page with error message
 		if (user == null) {
 
 			request.setAttribute("warning", "Email or password incorrect!");

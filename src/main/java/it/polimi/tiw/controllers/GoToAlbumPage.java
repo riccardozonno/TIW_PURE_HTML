@@ -3,8 +3,6 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Comparator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -39,7 +37,6 @@ public class GoToAlbumPage extends HttpServlet {
      */
     public GoToAlbumPage() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     @Override
@@ -74,8 +71,7 @@ public class GoToAlbumPage extends HttpServlet {
             response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
-		// TODO Auto-generated method stub
-		 // Ottieni l'ID dell'album dai parametri della richiesta
+
 		String pageStartStr = request.getParameter("pageStart");
         String albumIdStr = request.getParameter("albumId");
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
@@ -83,14 +79,14 @@ public class GoToAlbumPage extends HttpServlet {
         int albumId;
 
         try {
-            albumId = Integer.parseInt(albumIdStr); // Converti l'ID in un intero
+            albumId = Integer.parseInt(albumIdStr); 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid album ID");
             return;
         }
 
-        // Recupera l'oggetto Album dal database 
-        AlbumDAO albumDAO = new AlbumDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
+         
+        AlbumDAO albumDAO = new AlbumDAO(connection); 
         Album album;
 		try {
 			album = albumDAO.getAlbumById(albumId);
@@ -100,8 +96,8 @@ public class GoToAlbumPage extends HttpServlet {
 		}
 
         if (album == null) {
-            // Se l'album non esiste, invia un errore 404
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Album not found");
+
+        	forwardToErrorPage(request, response, "Album not found.");
             return;
         }
         System.out.println(album.getTitolo());
@@ -111,12 +107,12 @@ public class GoToAlbumPage extends HttpServlet {
             try {
                 pageStart = Integer.parseInt(pageStartStr);
             } catch (NumberFormatException e) {
-                pageStart = 0;  // Se non valido, imposto a 0
+                pageStart = 0;  
             }
         }
         
-        // Recupera le foto non in quell'album, sempre dell'utente
-        ImmagineDAO immagineDAO = new ImmagineDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
+        
+        ImmagineDAO immagineDAO = new ImmagineDAO(connection); 
         Immagine[] immagine;
         try {
 			immagine = immagineDAO.getAllUserImageExceptAlbum(userId, albumId);
@@ -124,13 +120,13 @@ public class GoToAlbumPage extends HttpServlet {
 			forwardToErrorPage(request, response, e.getMessage());
 			return;
 		}
-        // Salva l'oggetto Album come attributo della richiesta
+        
         request.setAttribute("gallery", immagine);
         request.setAttribute("album", album);
         request.getSession().setAttribute("albumId", (int)album.getId_album());
         request.setAttribute("pageStart", pageStart);
         
-        // Reindirizza alla pagina album
+
         forward(request, response,"/WEB-INF/albumPage.html");
     }
 
@@ -138,7 +134,6 @@ public class GoToAlbumPage extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	

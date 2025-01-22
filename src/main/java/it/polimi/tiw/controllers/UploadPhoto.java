@@ -31,7 +31,6 @@ import it.polimi.tiw.utils.TemplateHandler;
     fileSizeThreshold = 1024 * 1,  // 1KB
     maxFileSize = 1024 * 1024 * 10,      // 10MB
     maxRequestSize = 1024 * 1024 * 50    // 50MB
-    //location = "/TIW_PURE_HTML/src/main/webapp/static/res"
 )
 public class UploadPhoto extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -41,7 +40,6 @@ public class UploadPhoto extends HttpServlet {
     
     public UploadPhoto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
     @Override
@@ -67,18 +65,13 @@ public class UploadPhoto extends HttpServlet {
 
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
 
-     // Percorso corretto per salvare le immagini
-        //String uploadPath = getServletContext().getRealPath("/static/res");
         String uploadFilePath = "/Users/riccardozonno/res_html";
-        // creates upload folder if it does not exists
+
         File uploadFolder = new File(uploadFilePath);
         if (!uploadFolder.exists()) {
             uploadFolder.mkdirs();
         }
-
         Random random = new Random();
-
-     // Obtain a number between [0 - 49].
         int n = random.nextInt(1000000);
         String rand = Integer.toString(n);
         AlbumDAO albumDAO = new AlbumDAO(connection);
@@ -110,7 +103,6 @@ public class UploadPhoto extends HttpServlet {
             int albumId = (int)(request.getSession().getAttribute("albumId"));
             immagineDAO.linkImageToAlbum(imageId, albumId, userId);
 
-            // Aggiornamento del totale immagini nell'album
             albumDAO.updateAlbumImageCount(connection, albumId);
 
             response.sendRedirect("GoToAlbumPage?albumId=" + albumId);

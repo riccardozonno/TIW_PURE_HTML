@@ -12,14 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.thymeleaf.TemplateEngine;
 
-import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
-import it.polimi.tiw.utils.TemplateHandler;
 
 /**
  * Servlet implementation class AddImageToAlbum
@@ -27,7 +24,6 @@ import it.polimi.tiw.utils.TemplateHandler;
 @WebServlet("/AddImageToAlbum")
 public class AddImageToAlbum extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private TemplateEngine templateEngine;
     private Connection connection;
        
     /**
@@ -35,7 +31,6 @@ public class AddImageToAlbum extends HttpServlet {
      */
     public AddImageToAlbum() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -57,15 +52,12 @@ public class AddImageToAlbum extends HttpServlet {
         try {
 			immagineDAO.linkImageToAlbum(imageId, albumId, userId);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-        // Aggiornamento del totale immagini nell'album
         try {
 			albumDAO.updateAlbumImageCount(connection, albumId);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -76,14 +68,12 @@ public class AddImageToAlbum extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
     @Override
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
-        this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
         this.connection = ConnectionHandler.getConnection(servletContext);
     }
     

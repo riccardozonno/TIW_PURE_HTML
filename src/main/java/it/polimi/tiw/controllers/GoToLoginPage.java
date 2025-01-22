@@ -28,7 +28,6 @@ public class GoToLoginPage extends HttpServlet {
 	 */
 	public GoToLoginPage() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -54,7 +53,6 @@ public class GoToLoginPage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -15,11 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.thymeleaf.TemplateEngine;
 
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
-import it.polimi.tiw.utils.TemplateHandler;
 
 /**
  * Servlet implementation class DownloadPhoto
@@ -27,13 +25,11 @@ import it.polimi.tiw.utils.TemplateHandler;
 @WebServlet("/DownloadPhoto")
 public class DownloadPhoto extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private TemplateEngine templateEngine;
     private Connection connection;
 
     
     public DownloadPhoto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
     @Override
@@ -59,7 +55,7 @@ public class DownloadPhoto extends HttpServlet {
             response.setContentLengthLong(imageFile.length());
 
             try{
-            byte[] imageData = Files.readAllBytes( new File ((imagePath)).toPath());// data from db for specified imageId
+            byte[] imageData = Files.readAllBytes( new File ((imagePath)).toPath());
             
             OutputStream out = response.getOutputStream();
             out.write(imageData);
@@ -82,7 +78,6 @@ public class DownloadPhoto extends HttpServlet {
     public void init() throws ServletException {
 
         ServletContext servletContext = getServletContext();
-        this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
         this.connection = ConnectionHandler.getConnection(servletContext);
     }
     

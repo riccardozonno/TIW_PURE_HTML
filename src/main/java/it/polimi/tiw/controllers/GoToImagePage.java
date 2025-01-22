@@ -15,9 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Immagine;
-import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 import it.polimi.tiw.utils.TemplateHandler;
@@ -36,7 +34,6 @@ public class GoToImagePage extends HttpServlet {
      */
     public GoToImagePage() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -62,27 +59,24 @@ public class GoToImagePage extends HttpServlet {
 		
        String imageIdStr = request.getParameter("imageId");
        String albumIdStr = request.getParameter("albumId");
-       
-       
        int imageId;
        int albumId;
        
-
        try {
-           imageId = Integer.parseInt(imageIdStr);// Converti l'ID in un intero
+           imageId = Integer.parseInt(imageIdStr);
        } catch (NumberFormatException e) {
     	   imageId = (int)request.getAttribute("imageId");
     	   
        }
        try {
-           albumId = Integer.parseInt(albumIdStr);// Converti l'ID in un intero
+           albumId = Integer.parseInt(albumIdStr);
        } catch (NumberFormatException e) {
     	   albumId = (int)request.getAttribute("albumId");
        }
        
 
-       // Recupera l'oggetto Album dal database 
-       ImmagineDAO immagineDAO = new ImmagineDAO(connection); // Supponendo che AlbumDAO gestisca l'accesso ai dati
+      
+       ImmagineDAO immagineDAO = new ImmagineDAO(connection); 
        Immagine immagine;
 		try {
 			immagine = immagineDAO.getImageById(imageId);
@@ -91,20 +85,10 @@ public class GoToImagePage extends HttpServlet {
 			forwardToErrorPage(request, response, e.getMessage());
 			return;
 		}
-
-       if (immagine == null) {
-           // Se l'album non esiste, invia un errore 404
-           response.sendError(HttpServletResponse.SC_NOT_FOUND, "Immagine not found");
-           return;
-       }
-       System.out.println(immagine.getTitolo());
-
        
-       // Salva l'oggetto Album come attributo della richiesta
+
        request.setAttribute("image", immagine);
        request.setAttribute("albumId", albumId);
-       
-       // Reindirizza alla pagina albumPage.html (con Thymeleaf per il rendering dinamico)
        forward(request, response,"/WEB-INF/imagePage.html");
    }
 
@@ -115,7 +99,6 @@ public class GoToImagePage extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	

@@ -38,7 +38,6 @@ public class GoToHome extends HttpServlet {
 	 */
 	public GoToHome() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -69,19 +68,13 @@ public class GoToHome extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		// Gets the current user from the session
+		// Verifica se l'utente è loggato
 		HttpSession session = request.getSession(false);
-
-        // Verifica se l'utente è loggato
         if (session == null || session.getAttribute("currentUser") == null) {
         	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
 		User currentUser = (User) session.getAttribute("currentUser");
-	
-
-		// Gets the accounts that belong to the user, if the operation is successful
-		// saves them in the request and then redirects
 		AlbumDAO albumDAO = new AlbumDAO(connection);
 		Album[] userAlbums;
 		Album[] otherAlbums;
@@ -129,7 +122,6 @@ public class GoToHome extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -36,8 +36,7 @@ public class AddComment extends HttpServlet {
      */
     public AddComment() {
         super();
-        // TODO Auto-generated constructor stub
-    }
+        }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +49,6 @@ public class AddComment extends HttpServlet {
         	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
-		// TODO Auto-generated method stub
         String username = ((User) session.getAttribute("currentUser")).getUsername();
 		String commento = request.getParameter("testo");
 		int id_user = ((User) session.getAttribute("currentUser")).getId_user();
@@ -61,7 +59,6 @@ public class AddComment extends HttpServlet {
 			commentoDAO.createCommento(commento, id_user, id_immagine, username);
 			immagineDAO.updateTotCommentiByImageId(id_immagine);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			forwardToErrorPage(request, response, e.getMessage());
 		}
 		int id_album = Integer.parseInt(request.getParameter("albumId"));
@@ -76,7 +73,6 @@ public class AddComment extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	

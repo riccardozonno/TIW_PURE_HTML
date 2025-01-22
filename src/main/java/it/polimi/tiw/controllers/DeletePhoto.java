@@ -2,10 +2,8 @@ package it.polimi.tiw.controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Random;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -15,13 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import it.polimi.tiw.beans.Album;
-import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.CommentoDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
@@ -42,7 +37,6 @@ public class DeletePhoto extends HttpServlet {
      */
     public DeletePhoto() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -61,13 +55,13 @@ public class DeletePhoto extends HttpServlet {
 		int id_image;
 		int id_album;
 		try {
-            id_album = Integer.parseInt(albumIdStr); // Converti l'ID in un intero
+            id_album = Integer.parseInt(albumIdStr);
         } catch (NumberFormatException e) {
         	 id_album = (int)request.getAttribute("albumId");
             
         }
 		try {
-            id_image = Integer.parseInt(imageIdStr); // Converti l'ID in un intero
+            id_image = Integer.parseInt(imageIdStr); 
         } catch (NumberFormatException e) {
         	id_image = (int)request.getAttribute("imageId");
             
@@ -85,25 +79,24 @@ public class DeletePhoto extends HttpServlet {
         AlbumDAO albumDAO = new AlbumDAO(connection);
 
         try {
-            // Recupera il percorso del file dal database
+            
             String filePath = immagineDAO.getImagePathById(id_immagine);
             
             commentoDAO.deleteAllCommentsByImageId(id_immagine);
-            // Aggiorna il totale delle immagini nell'album
+            
             albumDAO.decrementAlbumImageCount(id_immagine);
             
-            //Aggiorna tabella image_album
+            
             immagineDAO.delinkImageToAlbum(id_immagine);
             
-            // Elimina l'immagine dal database
+            
             immagineDAO.deleteImageById(id_immagine);
 
-            // Elimina fisicamente il file dal server
+            
             deletePhysicalFile(getServletContext(), filePath);
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante l'eliminazione dell'immagine.");
+        	forwardToErrorPage(request, response, e.getMessage());
         }
 	}
 
@@ -111,7 +104,6 @@ public class DeletePhoto extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
@@ -147,9 +139,7 @@ public class DeletePhoto extends HttpServlet {
 	    }
 
 	    
-	    private void deletePhysicalFile(ServletContext context, String filePath) {
-	        // Percorso assoluto del file
-	        
+	    private void deletePhysicalFile(ServletContext context, String filePath) {	        
 	        File file = new File(filePath);
 
 	        if (file.exists()) {
