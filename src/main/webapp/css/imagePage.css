@@ -1,7 +1,7 @@
-/* Pulsante Home */
+
 .button-back-to {
     display: flex;
-    justify-content: center; /*space-between*/
+    justify-content: center; 
     align-items: center;
     width: 60%;
     margin: 20px auto;
@@ -29,7 +29,7 @@
     margin-top: 20px;
 }
 
-/* Immagine a schermo intero */
+
 .image-container {
     text-align: center;
     margin-top: 20px;
@@ -43,7 +43,7 @@
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-/* Pulsante per eliminare la foto */
+
 .btn-delete {
 	display: block;
     background-color: #dc3545;
@@ -60,7 +60,7 @@
     background-color: #c82333;
 }
 
-/* Sezione Commenti */
+
 .comments-section {
     margin: 30px auto;
     width: 60%;
@@ -78,7 +78,7 @@
     border-bottom: 1px solid #eaeaea;
 }
 
-/* Form Aggiungi Commento */
+
 .add-comment textarea {
     width: 70%;
     height: 80px;
@@ -86,7 +86,7 @@
     border-radius: 5px;
     border: 1px solid #ccc;
     display: block;
-    margin: 0 auto;  /* Centra orizzontalmente */
+    margin: 0 auto;  
 }
 
 .btn-comment {

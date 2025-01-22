@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="ISO-8859-1">
-    <title th:text="'Immagine - ' + ${image.titolo}">Visualizza Immagine</title>
+    <title th:text="'Immagine - ' + ${image.titolo}">View image</title>
     <link rel="stylesheet" type="text/css" href="css/global.css" th:href="@{/css/global.css}" />
     <link rel="stylesheet" type="text/css" href="css/imagePage.css" th:href="@{/css/imagePage.css}" />
 </head>
@@ -22,8 +22,8 @@
 
     <!-- Titolo e Descrizione della Foto -->
     <div class="image-details">
-        <h1 th:text="${image.titolo}">Titolo dell'Immagine</h1>
-        <p th:text="${image.descrizione}">Descrizione dell'immagine</p>
+        <h1 th:text="${image.titolo}">Image title</h1>
+        <p th:text="${image.descrizione}">Description</p>
     </div>
 
     <!-- Visualizzazione dell'Immagine -->
@@ -35,30 +35,30 @@
 
     <!-- Sezione Commenti -->
     <div class="comments-section">
-        <h3>Commenti</h3>
+        <h3>Comments</h3>
         
         <div th:if="${image.commenti != null and image.commenti.length > 0}">
             <ul>
                 <li th:each="commento : ${image.commenti}">
                     <strong th:text="${commento.username}">Username</strong>: 
-                    <span th:text="${commento.testo}">Contenuto del commento</span>
+                    <span th:text="${commento.testo}">Text</span>
                 </li>
             </ul>
         </div>
 
         <div th:if="${image.commenti == null or image.commenti.length == 0}">
-            <p>Nessun commento presente.</p>
+            <p>No comment found.</p>
         </div>
     </div>
 
     <!-- Form per Inserire un Nuovo Commento -->
     <div class="add-comment">
-        <h3>Aggiungi un Commento</h3>
+        <h3>Add a comment</h3>
         <form th:action="@{/AddComment}" method="post">
             <input type="hidden" name="imageId" th:value="${image.id_immagine}" />
             <input type="hidden" name="albumId" th:value="${albumId}" />
             <textarea name="testo" placeholder="Scrivi il tuo commento qui..." required></textarea><br>
-            <button type="submit" class="btn btn-comment">Invia Commento</button>
+            <button type="submit" class="btn btn-comment">Send comment</button>
         </form>
     </div>
     
@@ -67,7 +67,7 @@
         <form th:action="@{/DeletePhoto(albumId=${albumId}, imageId=${image.id_immagine})}" method="post">
             <input type="hidden" name="imageId" th:value="${image.id_immagine}" />
             <input type="hidden" name="albumId" th:value="${albumId}" />
-            <button type="submit" class="btn btn-delete">Elimina Foto</button>
+            <button type="submit" class="btn btn-delete">Delete image</button>
         </form>
     </div>
 

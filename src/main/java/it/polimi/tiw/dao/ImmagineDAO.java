@@ -366,7 +366,7 @@ public class ImmagineDAO {
  	            	CommentoDAO commentoDAO = new CommentoDAO(connection);
  	            	
 	                while (result2.next()) {
-	                    id_commenti[j] = result2.getInt("id_ima");
+	                    id_commenti[j] = result2.getInt("id_im");
 	                    j++;
 	                }
  	            

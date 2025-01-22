@@ -13,14 +13,14 @@
     <button class="btn btn-home" onclick="window.location.href='GoToHome'">Home</button>
 
     <!-- Titolo dell'album -->
-    <h1 th:text="${album.titolo}">Titolo dell'Album</h1>
+    <h1 th:text="${album.titolo}">Album Title</h1>
     
     <!-- Navigazione tra le pagine di immagini -->
     <div class="pagination">
         <!-- Bottone Precedenti -->
         <a th:if="${pageStart > 0}"
    th:href="@{/GoToAlbumPage(albumId=${album.id_album}, pageStart=${pageStart - 5})}">
-    <button class="btn btn-previous">Precedenti</button>
+    <button class="btn btn-previous">Previous</button>
 	</a>
 
     <!-- Tabella delle immagini -->
@@ -33,7 +33,7 @@
    					 <a th:href="@{/GoToImagePage(imageId=${image.id_immagine}, albumId=${album.id_album})}">
        				<img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" alt="Image Thumbnail" width="150" height="150"/>
        				</a>
-       				 <div th:text="${image.titolo}">Titolo Immagine</div>
+       				 <div th:text="${image.titolo}">Image Title</div>
 				</td>
    
                 <!-- Celle vuote per completare sempre 5 colonne -->
@@ -48,26 +48,26 @@
 
        <a th:if="${pageStart + 5 < album.totale_immagini}"
    th:href="@{/GoToAlbumPage(albumId=${album.id_album}, pageStart=${pageStart + 5})}">
-    <button class="btn btn-next">Successive</button>
+    <button class="btn btn-next">Next</button>
 	</a>
 </div>
 
     <!-- Form di Upload (nascosto di default) -->
     <div id="uploadForm" th:if="${session.currentUser.id_user == album.id_user_proprietario}">
-        <h3>Carica una nuova immagine</h3>
+        <h3>Upload a new image in this album</h3>
         <form method="post" th:action="@{/UploadPhoto(inAlbum=true)}" enctype="multipart/form-data">
             <input type="hidden" name="albumId" th:value="${albumId}" />
 
-            <label for="title">Titolo:</label>
+            <label for="title">Title:</label>
             <input type="text" id="title" name="title" required /><br><br>
 
-            <label for="description">Descrizione:</label>
+            <label for="description">Description:</label>
             <textarea id="description" name="description" required></textarea><br><br>
 
-            <label for="file">Seleziona immagine:</label>
+            <label for="file">Select image:</label>
             <input type="file" id="file" name="file" accept="image/*" required /><br><br>
 
-            <button type="submit">Carica Immagine</button>
+            <button type="submit">Upload</button>
         </form>
     </div>
 
@@ -85,7 +85,7 @@
         	<a th:href="@{/AddImageToAlbum(imageId=${image.id_immagine})}">
         	<img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
         	</a>
-            <p th:text="${image.titolo}">Titolo immagine</p>
+            <p th:text="${image.titolo}">Image Title</p>
         </div>
     
      <div th:if="${gallery == null}">

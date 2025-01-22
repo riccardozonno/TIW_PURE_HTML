@@ -56,7 +56,7 @@ public class CheckNotLoggedUser implements Filter {
 			
 			if (user != null) {
 				
-				res.sendRedirect(request.getServletContext().getContextPath() + "GoToHome");
+				res.sendRedirect(request.getServletContext().getContextPath() + "/GoToHome");
 				return;
 			}
 		}
