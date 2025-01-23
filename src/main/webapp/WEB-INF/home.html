@@ -24,10 +24,10 @@
     <!-- Form di caricamento immagine -->
     <form id="uploadForm" method="post" th:action="@{/UploadPhoto(inAlbum=false)}" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title" placeholder="Inserisci il titolo" required><br><br>
+        <input type="text" id="title" name="title" placeholder="Insert title" required><br><br>
 
         <label for="description">Description:</label><br>
-        <textarea id="description" name="description" placeholder="Inserisci una descrizione" rows="3" required></textarea><br><br>
+        <textarea id="description" name="description" placeholder="Inserist description" rows="3" required></textarea><br><br>
 
         <label for="file">Select Image:</label><br>
         <input type="file" id="file" name="file" accept="image/*" required><br><br>
