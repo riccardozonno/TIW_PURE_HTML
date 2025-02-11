@@ -9,32 +9,25 @@
 
 <body>
 	<div class="button-back-to">
-    <!-- Bottone Album -->
     <a th:href="@{/GoToHome}">
     	<button class="btn btn-home">Back to Home</button>
 	</a>
     
-    <!-- Bottone Album -->
     <a th:href="@{/GoToAlbumPage(albumId=${albumId})}">
     	<button class="btn btn-album">Back to Album</button>
 	</a>
 	</div>
 
-    <!-- Titolo e Descrizione della Foto -->
     <div class="image-details">
         <h1 th:text="${image.titolo}">Image title</h1>
         <p th:text="${image.descrizione}">Description</p>
     </div>
 
-    <!-- Visualizzazione dell'Immagine -->
     <div class="image-container">
         <img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" alt="Immagine Non Trovata" class="full-image"/>
     </div>
 
-    
-
-    <!-- Sezione Commenti -->
-    <div class="comments-section">
+        <div class="comments-section">
         <h3>Comments</h3>
         
         <div th:if="${image.commenti != null and image.commenti.length > 0}">
@@ -51,7 +44,6 @@
         </div>
     </div>
 
-    <!-- Form per Inserire un Nuovo Commento -->
     <div class="add-comment">
         <h3>Add a comment</h3>
         <form th:action="@{/AddComment}" method="post">
@@ -62,7 +54,6 @@
         </form>
     </div>
     
-    <!-- Bottone per Eliminare la Foto (visibile solo al proprietario) -->
     <div th:if="${session.currentUser.id_user == image.id_user_proprietario}">
         <form th:action="@{/DeletePhoto(albumId=${albumId}, imageId=${image.id_immagine})}" method="post">
             <input type="hidden" name="imageId" th:value="${image.id_immagine}" />

@@ -141,15 +141,7 @@ public class GoToAlbumPage extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	/**
-	 * Forwards to the ErrorPage
-	 * 
-	 * @param request
-	 * @param response
-	 * @param error
-	 * @throws ServletException
-	 * @throws IOException
-	 */
+
 	private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error)
 			throws ServletException, IOException {
 
@@ -158,15 +150,7 @@ public class GoToAlbumPage extends HttpServlet {
 		return;
 	}
 	
-	/**
-	 * Forwards to the specified path
-	 * 
-	 * @param request
-	 * @param response
-	 * @param path
-	 * @throws ServletException
-	 * @throws IOException
-	 */
+
 	private void forward(HttpServletRequest request, HttpServletResponse response, String path)
 			throws ServletException, IOException {
 

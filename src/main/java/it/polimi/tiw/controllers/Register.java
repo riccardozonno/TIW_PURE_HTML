@@ -75,16 +75,7 @@ public class Register extends HttpServlet {
     }
 
 
-    /**
-     * Verifies the input and if it is correct creates the user in the DB and an account of the user.
-     * If the operation is successful returns 0, else returns null
-     *
-     * @param request
-     * @param response
-     * @return User
-     * @throws ServletException
-     * @throws IOException
-     */
+
     private Integer registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String email = request.getParameter("email");
@@ -192,15 +183,7 @@ public class Register extends HttpServlet {
     }
 
 
-    /**
-     * Forwards to the ErrorPage
-     *
-     * @param request
-     * @param response
-     * @param error
-     * @throws ServletException
-     * @throws IOException
-     */
+
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
 
         request.setAttribute("error", error);
@@ -208,15 +191,7 @@ public class Register extends HttpServlet {
         return;
     }
 
-    /**
-     * Forwards to the specified path
-     *
-     * @param request
-     * @param response
-     * @param path
-     * @throws ServletException
-     * @throws IOException
-     */
+
     private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
 
         ServletContext servletContext = getServletContext();

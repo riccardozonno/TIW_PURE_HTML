@@ -75,15 +75,7 @@ public class CheckNotLoggedUser implements Filter {
 		templateResolver.setSuffix(".html");
 	}
 	
-	/**
-	 * Forwards to the specified path
-	 * 
-	 * @param request
-	 * @param response
-	 * @param path
-	 * @throws ServletException
-	 * @throws IOException
-	 */
+
 	public void forward(HttpServletRequest request, HttpServletResponse response, String path)
 			throws ServletException, IOException {
 

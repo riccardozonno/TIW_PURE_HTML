@@ -9,7 +9,6 @@
 
 <body>
 
-    <!--  Pulsante Logout (in alto a destra) -->
     <button class="btn-logout" onclick="window.location.href='Logout'">Logout</button>
    
     <div class="home-title" th:text="'Welcome to your home, ' + ${session.currentUser.username}">Welcome to your home, user</div>
@@ -21,7 +20,6 @@
 <div class="my-images">
     <h3>My Gallery</h3>
 
-    <!-- Form di caricamento immagine -->
     <form id="uploadForm" method="post" th:action="@{/UploadPhoto(inAlbum=false)}" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title" placeholder="Insert title" required><br><br>
@@ -39,10 +37,8 @@
     <div>
     <h3>My Images</h3>
     </div>
-    <!-- Galleria di immagini -->
     <div class="image-gallery" th:if="${myImages != null and myImages.length > 0}">
     
-        <!-- Ciclo per visualizzare le immagini -->
 		<div class="image-item" th:each="image : ${myImages}">
    	 		
        		 <img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
@@ -57,7 +53,6 @@
     </div>
 </div>
 
-    <!-- Create album form -->
     <div class="create-album-form">
         <h3>Create a new album</h3>
         <form action="#" th:action="@{/CreateAlbum}" method="post">
@@ -67,7 +62,6 @@
         </form>
     </div>
 
-    <!-- Albums created by the current user -->
     <div class="my-albums">
         <h3>My Albums</h3>
         <div th:if="${myAlbums != null and myAlbums.length > 0}">
@@ -96,7 +90,6 @@
         </div>
     </div>
 
-    <!-- Albums created by others -->
     <div class="other-albums">
         <h3>Other Albums</h3>
         <div th:if="${otherAlbums != null and otherAlbums.length > 0}">

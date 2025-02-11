@@ -9,21 +9,18 @@
 
 <body>
 
-    <!-- Bottone Home (in alto a sinistra) -->
+
     <button class="btn btn-home" onclick="window.location.href='GoToHome'">Home</button>
 
-    <!-- Titolo dell'album -->
     <h1 th:text="${album.titolo}">Album Title</h1>
     
-    <!-- Navigazione tra le pagine di immagini -->
     <div class="pagination">
-        <!-- Bottone Precedenti -->
         <a th:if="${pageStart > 0}"
    th:href="@{/GoToAlbumPage(albumId=${album.id_album}, pageStart=${pageStart - 5})}">
     <button class="btn btn-previous">Previous</button>
 	</a>
 
-    <!-- Tabella delle immagini -->
+
     <div class="image-table">
         <table>
             <tr>
@@ -52,7 +49,7 @@
 	</a>
 </div>
 
-    <!-- Form di Upload (nascosto di default) -->
+
     <div id="uploadForm" th:if="${session.currentUser.id_user == album.id_user_proprietario}">
         <h3>Upload a new image in this album</h3>
         <form method="post" th:action="@{/UploadPhoto(inAlbum=true)}" enctype="multipart/form-data">
@@ -76,11 +73,9 @@
 	<div>
     <h3>Click the images below to add on the current album</h3>
     </div>
-    <!-- Galleria di immagini -->
-    
+        
     <div class="image-gallery" th:if="${gallery != null and gallery.length > 0}">
     
-        <!-- Ciclo per visualizzare le immagini -->
         <div class="image-item" th:each="image : ${gallery}">
         	<a th:href="@{/AddImageToAlbum(imageId=${image.id_immagine})}">
         	<img th:src="@{/DownloadPhoto(imageId=${image.id_immagine})}" th:alt="${image.titolo}" />
