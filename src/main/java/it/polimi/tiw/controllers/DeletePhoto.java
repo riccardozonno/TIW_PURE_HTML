@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.CommentoDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
@@ -50,8 +51,17 @@ public class DeletePhoto extends HttpServlet {
         	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
+       
 		String albumIdStr =  request.getParameter("albumId");
 		String imageIdStr =  request.getParameter("imageId");
+		 if (albumIdStr == null || albumIdStr.isEmpty()) {
+	        	forwardToErrorPage(request,response,"id album non valido");
+	            return;
+	        }
+	     if (imageIdStr == null || imageIdStr.isEmpty()) {
+	       	forwardToErrorPage(request,response,"id immagine non valido");
+	        return;
+	        }
 		int id_image;
 		int id_album;
 		try {
@@ -66,7 +76,17 @@ public class DeletePhoto extends HttpServlet {
         	id_image = (int)request.getAttribute("imageId");
             
         }
-    	deleteImage(request, response, id_image);
+		ImmagineDAO imageDAO = new ImmagineDAO(connection);
+		
+		try {
+			if((int)((User)session.getAttribute("currentUser")).getId_user() != imageDAO.getImageById(id_image).getId_user_proprietario() )
+			forwardToErrorPage(request, response,"cancellazione non autorizzata");
+			return;
+		} catch (SQLException | ServletException | IOException e) {
+			forwardToErrorPage(request, response,"immagine non trovata");
+		}
+		
+		deleteImage(request, response, id_image);
     	request.setAttribute("albumId",id_album );
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/GoToAlbumPage");

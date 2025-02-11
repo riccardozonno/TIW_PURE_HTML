@@ -74,6 +74,12 @@ public class GoToAlbumPage extends HttpServlet {
 
 		String pageStartStr = request.getParameter("pageStart");
         String albumIdStr = request.getParameter("albumId");
+        
+        
+        if (albumIdStr == null || albumIdStr.isEmpty()) {
+        	forwardToErrorPage(request,response,"id album non valido");
+            return;
+        }
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
         int albumId;
 

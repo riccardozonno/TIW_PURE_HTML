@@ -12,11 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.TemplateHandler;
 
 /**
  * Servlet implementation class AddImageToAlbum
@@ -25,6 +28,7 @@ import it.polimi.tiw.utils.ConnectionHandler;
 public class AddImageToAlbum extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private Connection connection;
+    private TemplateEngine templateEngine;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -45,6 +49,11 @@ public class AddImageToAlbum extends HttpServlet {
 		
         int userId = ((User) session.getAttribute("currentUser")).getId_user();
         int albumId = (int) session.getAttribute("albumId");
+        
+        if (request.getParameter("imageId") == null || request.getParameter("imageId").isEmpty()) {
+        	forwardToErrorPage(request,response,"id immagine non valido");
+            return;
+        }
         int imageId = Integer.parseInt(request.getParameter("imageId"));
 		ImmagineDAO immagineDAO = new ImmagineDAO(connection);
 		AlbumDAO albumDAO = new AlbumDAO(connection);
@@ -75,6 +84,7 @@ public class AddImageToAlbum extends HttpServlet {
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
         this.connection = ConnectionHandler.getConnection(servletContext);
+        this.templateEngine = TemplateHandler.getEngine(servletContext, getServletInfo());
     }
     
     @Override
@@ -89,5 +99,29 @@ public class AddImageToAlbum extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+    
+    private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
+
+        request.setAttribute("error", error);
+        forward(request, response, "/WEB-INF/error.html");
+        return;
+    }
+
+    /**
+     * Forwards to the specified path
+     *
+     * @param request
+     * @param response
+     * @param path
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
+
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        templateEngine.process(path, ctx, response.getWriter());
+    }
+    
 
 }

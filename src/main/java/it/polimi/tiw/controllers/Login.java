@@ -77,7 +77,7 @@ public class Login extends HttpServlet {
 
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		if (email == null || password == null) {
+		if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
 
 			forwardToErrorPage(request, response, "Null email or password");
 			return;

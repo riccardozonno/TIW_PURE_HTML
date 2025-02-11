@@ -105,8 +105,7 @@ public class CreateAlbum extends HttpServlet {
         User user = (User) (request.getSession().getAttribute("currentUser"));
         
 
-        if( titolo == null) {
-
+        if( titolo == null || titolo.isEmpty()) {
             forwardToErrorPage(request, response, "Missing album title");
             return null;
         }

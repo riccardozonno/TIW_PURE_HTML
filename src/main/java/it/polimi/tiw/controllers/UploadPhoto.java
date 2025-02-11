@@ -58,8 +58,11 @@ public class UploadPhoto extends HttpServlet {
         
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        
         String inAlbumStr = request.getParameter("inAlbum");
+        if (title == null || title.isEmpty() || description == null || description.isEmpty() || inAlbumStr == null || inAlbumStr.isEmpty() || request.getPart("file").getSize() <= 0 || request.getPart("file") == null) {
+        	forwardToErrorPage(request,response,"invalid title or description or id album inserted");
+            return;
+        }
         boolean inAlbum = Boolean.parseBoolean(inAlbumStr);
 
         int userId = ((User) session.getAttribute("currentUser")).getId_user();

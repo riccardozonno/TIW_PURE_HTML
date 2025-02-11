@@ -49,10 +49,27 @@ public class AddComment extends HttpServlet {
         	response.sendRedirect(request.getServletContext().getContextPath() + "/GoToLoginPage");
             return;
         }
+        
         String username = ((User) session.getAttribute("currentUser")).getUsername();
-		String commento = request.getParameter("testo");
+        
+        String commento = request.getParameter("testo");
+        if (commento == null || commento.isEmpty()) {
+        	forwardToErrorPage(request,response,"il commento inserito è vuoto");
+            return;
+        }
+		
+		
 		int id_user = ((User) session.getAttribute("currentUser")).getId_user();
+		
+		if (request.getParameter("imageId") == null) {
+        	forwardToErrorPage(request,response,"id immagine non valido");
+            return;
+        }
 		int id_immagine = Integer.parseInt(request.getParameter("imageId"));
+		if (id_immagine <= 0) {
+        	forwardToErrorPage(request,response,"id immagine non valido");
+            return;
+        }
 		CommentoDAO commentoDAO = new CommentoDAO(connection);
 		ImmagineDAO immagineDAO = new ImmagineDAO(connection);
 		try {

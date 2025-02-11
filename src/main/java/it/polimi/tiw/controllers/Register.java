@@ -87,12 +87,12 @@ public class Register extends HttpServlet {
      */
     private Integer registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String email      = request.getParameter("email");
-        String username   = request.getParameter("username");
-        String password   = request.getParameter("password");
+        String email = request.getParameter("email");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
         String repeat_pwd = request.getParameter("repeat_pwd");
 
-        if( email == null || username == null || password == null || repeat_pwd == null) {
+        if( email == null || email.isEmpty() || username == null || username.isEmpty() || password == null || password.isEmpty() || repeat_pwd == null || repeat_pwd.isEmpty()) {
             forwardToErrorPage(request, response, "Register module missing some data");
             return null;
         }

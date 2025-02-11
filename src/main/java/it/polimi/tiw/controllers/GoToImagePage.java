@@ -59,6 +59,14 @@ public class GoToImagePage extends HttpServlet {
 		
        String imageIdStr = request.getParameter("imageId");
        String albumIdStr = request.getParameter("albumId");
+       if (imageIdStr == null || imageIdStr.isEmpty()) {
+       	forwardToErrorPage(request,response,"id immagine non valido");
+           return;
+       }
+       if (albumIdStr == null || albumIdStr.isEmpty()) {
+       	forwardToErrorPage(request,response,"id album non valido");
+           return;
+       }
        int imageId;
        int albumId;
        

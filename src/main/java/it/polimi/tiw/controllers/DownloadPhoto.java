@@ -15,9 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
 import it.polimi.tiw.dao.ImmagineDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
+import it.polimi.tiw.utils.TemplateHandler;
+
 
 /**
  * Servlet implementation class DownloadPhoto
@@ -26,7 +30,7 @@ import it.polimi.tiw.utils.ConnectionHandler;
 public class DownloadPhoto extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection;
-
+    private TemplateEngine templateEngine;
     
     public DownloadPhoto() {
 		super();
@@ -43,6 +47,10 @@ public class DownloadPhoto extends HttpServlet {
         }
         try {
             String imageId = request.getParameter("imageId");
+            if (imageId == null || imageId.isEmpty()) {
+    	       	forwardToErrorPage(request,response,"id immagine non valido");
+    	        return;
+    	        }
             ImmagineDAO immagineDAO = new ImmagineDAO(connection);
    
             String imagePath = immagineDAO.getImagePathById(Integer.parseInt(imageId));
@@ -79,6 +87,7 @@ public class DownloadPhoto extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         this.connection = ConnectionHandler.getConnection(servletContext);
+        this.templateEngine = TemplateHandler.getEngine(servletContext, ".html");
     }
     
     public void destroy() {
@@ -91,5 +100,27 @@ public class DownloadPhoto extends HttpServlet {
 
             e.printStackTrace();
         }
+    }
+    private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{
+
+        request.setAttribute("error", error);
+        forward(request, response, "/WEB-INF/error.html");
+        return;
+    }
+
+    /**
+     * Forwards to the specified path
+     *
+     * @param request
+     * @param response
+     * @param path
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void forward(HttpServletRequest request, HttpServletResponse response, String path) throws ServletException, IOException{
+
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        templateEngine.process(path, ctx, response.getWriter());
     }
 }
