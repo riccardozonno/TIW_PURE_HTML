@@ -2,7 +2,7 @@
 
 Web application for managing personal photo albums, built as an individual project for the **Web Information Technologies** course (Tecnologie Informatiche per il Web) at **Politecnico di Milano**.
 
-This is the **server-side rendered** version: every page is generated on the server with Thymeleaf and each user action reloads the page. A second version of the same application, built as a single-page Rich Internet Application in JavaScript, is available in [TIW_RIA](https://github.com/riccardozonnopolimi/TIW_RIA).
+This is the **server-side rendered** version: every page is generated on the server with Thymeleaf and each user action reloads the page. A second version of the same application, built as a single-page Rich Internet Application in JavaScript, is available in [TIW_RIA](https://github.com/riccardozonno/TIW_RIA).
 
 ## Features
 
